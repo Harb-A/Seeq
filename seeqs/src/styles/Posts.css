@@ -1,0 +1,33 @@
+.posts-button-container {
+  display: flex;
+  flex-direction: row;
+  width: 50%;
+  margin: auto;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+.posts-create-new {
+  flex: 3;
+  margin: 5px;
+}
+.posts-toggle {
+  flex: 1;
+  margin: 5px;
+  cursor: pointer;
+}
+
+.active {
+  color: #ffffff;
+  text-decoration: underline;
+}
+
+.posts-pagination-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  margin: auto;
+  width: 30%;
+}

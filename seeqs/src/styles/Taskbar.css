@@ -1,0 +1,30 @@
+.taskbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background-color: #1c3263;
+  color: #fff;
+}
+
+.taskbar-title {
+  font-size: 1.5rem;
+}
+
+.taskbar-navigation-buttons {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.taskbar-navigation-button {
+  text-decoration: none;
+  color: #fff;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.taskbar-navigation-button:hover {
+  background-color: #102a54;
+  text-decoration: underline;
+}

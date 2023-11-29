@@ -1,0 +1,46 @@
+.register-form-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-color: #f0f5f9; /* Light blue background color */
+}
+
+.register-form-container-title {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  color: #1c3263; /* Dark blue title color */
+}
+
+.register-form-container-row {
+  margin-bottom: 1rem;
+  text-align: left;
+}
+
+.register-form-container-label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #1c3263; /* Dark blue label color */
+}
+
+.register-form-input {
+  padding: 0.5rem;
+  width: 100%;
+  border: 1px solid #1c3263; /* Dark blue border for inputs */
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.register-form-button {
+  padding: 0.5rem 1rem;
+  background-color: #1c3263; /* Dark blue button background color */
+  color: #fff; /* White button text color */
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.register-form-button:hover {
+  background-color: #102a54; /* Slightly darker blue on hover */
+}
