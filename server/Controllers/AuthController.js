@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 const asyncHandler = require("express-async-handler");
 // app.use(express.json());
 
+// route link (http://localhost:3000/auth/)
 
 const login = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
@@ -13,7 +14,6 @@ const login = asyncHandler(async (req, res) => {
   }
 
   const foundUser = await User.findOne({ email }).exec();
-  console.log(foundUser);
 
   if (!foundUser) {
     return res.status(401).json({ message: "Unauthorized" });
@@ -55,6 +55,7 @@ const login = asyncHandler(async (req, res) => {
 // @desc Refresh
 // @route GET /auth/refresh
 // @access Public - because access token has expired
+// route link (http://localhost:3000/auth/refresh)
 
 const refresh = (req, res) => {
   const cookies = req.cookies;
@@ -91,6 +92,7 @@ const refresh = (req, res) => {
   );
 };
 
+// route link (http://localhost:3000/auth/logout)
 const logout = (req, res) => {
   const cookies = req.cookies;
   if (!cookies?.jwt) return res.sendStatus(204); //No content
