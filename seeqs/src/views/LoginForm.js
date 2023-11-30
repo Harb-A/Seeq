@@ -6,27 +6,45 @@ const LoginForm = () => {
   //Use states for the username and password
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
-  //Navigate to pages
-  const navigate = useNavigate();
-
-  //Set the username on change
   const handleEmailChange = (event) => {
     setEmail(event.target.value);
   };
-
-  //Set the password on change
   const handlePasswordChange = (event) => {
     setPassword(event.target.value);
   };
 
-  //Login logic
+  const navigate = useNavigate();
+
+  //Email front-end verification
+  const validateEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  //Password front-end verification ( 8-16 & contains atleast 1 capital)
+  const validatePassword = (password) => {
+    if (password.length < 8 || password.length > 16) {
+      return "Password must be between 8 and 16 characters";
+    }
+
+    if (!/[A-Z]/.test(password)) {
+      return "Password must contain at least one capital letter";
+    }
+    return "valid";
+  };
+
+  //Form validation
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    //Alert the user of empty fields (CHANGE THIS TO FE FORM VERIFACTION)
-    if (email.trim() === "" || password.trim() === "") {
-      alert("Please enter both username and password");
+    if (!validateEmail(email)) {
+      alert("Please enter a valid email address");
+      return;
+    }
+
+    const passwordValidationResult = validatePassword(password);
+    if (passwordValidationResult !== "valid") {
+      alert(passwordValidationResult);
       return;
     }
 
