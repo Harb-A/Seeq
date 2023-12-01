@@ -4,13 +4,16 @@ const userSchema = new mongoose.Schema({
   _id: mongoose.Schema.Types.ObjectId,
   name: String,
   email: String,
+  phone: String,
   password: String,
-  Resume: {
+  resume: {
     file: String,
     resumeID: mongoose.Schema.Types.ObjectId
   },
-  Posts: {
+  posts: {
     title: String,
+    position: String,
+    skills: [String],
     information: String,
     applications: [{
       user_id: mongoose.Schema.Types.ObjectId,
