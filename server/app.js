@@ -1,6 +1,5 @@
 const express = require("express");
 const mongoose = require("mongoose");
-const cors = require("cors");
 require("dotenv").config();
 const app = express();
 
@@ -16,7 +15,7 @@ mongoose
     console.log("Connected to MongoDB");
     // Start the <link>Express.js</link> server after successful database connection
     app.listen(PORT, () => {
-      console.log("Server started on port 4000");
+      console.log("Server started on port 3000");
     });
   })
   .catch((error) => {
@@ -25,15 +24,5 @@ mongoose
 
 app.use(express.json());
 
-app.use(
-  cors({
-    origin: ["http://localhost:3000"],
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    credentials: true,
-  })
-);
-
-app.options("*", cors());
-
-app.use("/api/users", require("./Routes/UserRoutes"));
-app.use("/api/auth", require("./Routes/AuthRoutes"));
+app.use("/users", require("./Routes/UserRoutes"));
+app.use("/auth", require("./Routes/AuthRoutes"));

@@ -1,16 +1,23 @@
+body {
+  background-color: #f0f5f9;
+}
+
 .login-form-container {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   height: 100vh;
-  background-color: #f0f5f9; /* Light blue background color */
+  width: 50%;
+  margin: auto;
+  border: 1px solid #f0f5f9;
+  background-color: white;
 }
 
 .login-form-container-title {
-  font-size: 2rem;
+  font-size: 3rem;
   margin-bottom: 1rem;
-  color: #1c3263; /* Dark blue title color */
+  color: #1c3263;
 }
 
 .login-form-container-row {
@@ -21,10 +28,9 @@
 .login-form-container-label {
   display: block;
   margin-bottom: 0.5rem;
-  color: #1c3263; /* Dark blue label color */
+  color: #1c3263;
 }
 
-/* LoginForm.css */
 .login-form-input {
   padding: 0.5rem;
   width: 100%;
