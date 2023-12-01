@@ -56,18 +56,19 @@ const Posts = () => {
       <div>
         {/* Buttons to toggle between hidden and public posts */}
         <div className="posts-button-container">
-          <button className="posts-create-new">
-            <Link to="/new-post">Create New Post</Link>
-          </button>
+          <Link to="/new-post" className="posts-create-new">
+            Create New Post
+          </Link>
+
           <button
             className={`posts-toggle ${showHiddenPosts ? "" : "active"}`}
-            onClick={() => setShowHiddenPosts(false)}
+            onClick={() => setShowHiddenPosts(false) & setCurrentPage(1)}
           >
             Public Posts
           </button>
           <button
             className={`posts-toggle ${showHiddenPosts ? "active" : ""}`}
-            onClick={() => setShowHiddenPosts(true)}
+            onClick={() => setShowHiddenPosts(true) & setCurrentPage(1)}
           >
             Hidden Posts
           </button>

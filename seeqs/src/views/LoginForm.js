@@ -3,9 +3,11 @@ import "../styles/LoginForm.css";
 import { useNavigate } from "react-router-dom";
 
 const LoginForm = () => {
-  //Use states for the username and password
+  //Use states for the email and password
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  //Set states for email and password
   const handleEmailChange = (event) => {
     setEmail(event.target.value);
   };
@@ -15,13 +17,11 @@ const LoginForm = () => {
 
   const navigate = useNavigate();
 
-  //Email front-end verification
+  //Validate functions for email and password
   const validateEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
   };
-
-  //Password front-end verification ( 8-16 & contains atleast 1 capital)
   const validatePassword = (password) => {
     if (password.length < 8 || password.length > 16) {
       return "Password must be between 8 and 16 characters";
@@ -33,21 +33,24 @@ const LoginForm = () => {
     return "valid";
   };
 
-  //Form validation
+  //Login form validation
   const handleSubmit = async (event) => {
     event.preventDefault();
 
+    //Validate the email
     if (!validateEmail(email)) {
       alert("Please enter a valid email address");
       return;
     }
 
+    //Validate the password
     const passwordValidationResult = validatePassword(password);
     if (passwordValidationResult !== "valid") {
       alert(passwordValidationResult);
       return;
     }
 
+    //Login api to check if user details are correct
     try {
       const response = await fetch("http://localhost:4000/api/auth/", {
         method: "POST",
@@ -68,6 +71,7 @@ const LoginForm = () => {
       const data = await response.json();
       const accessToken = data.accessToken;
 
+      //Store JWT token in local storage
       localStorage.setItem("accessToken", accessToken);
     } catch (error) {
       console.log(error);

@@ -8,6 +8,7 @@ import NotFound from "./views/NotFound.js";
 import Posts from "./views/Posts.js";
 import Applications from "./views/Applications.js";
 import NewPost from "./views/NewPost.js";
+import DetailPage from "./views/DetailPage.js";
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
           <Route path="/" element={<LoginForm />} />
           <Route path="/register" element={<RegisterForm />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/detail/:id" element={<DetailPage />}></Route>
           <Route path="/posts" element={<Posts />} />
           <Route path="/applications" element={<Applications />} />
           <Route path="/new-post" element={<NewPost />} />

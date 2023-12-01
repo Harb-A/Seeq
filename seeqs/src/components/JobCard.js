@@ -1,12 +1,8 @@
 import React from "react";
 import "../styles/JobCard.css";
+import { Link } from "react-router-dom";
 
 const JobCard = ({ post }) => {
-  const yaya = () => {
-    console.log(post);
-    // Add your desired functionality here
-  };
-
   return (
     <div className="job-card">
       {/* Title of the job card */}
@@ -16,9 +12,9 @@ const JobCard = ({ post }) => {
 
       {/* Apply span */}
       <div className="apply-section">
-        <span className="apply-button" onClick={yaya}>
-          Read more/apply &gt;&gt;&gt;
-        </span>
+        <Link to={`/detail/${post.id}`}>
+          <span className="apply-button">Read more/apply &gt;&gt;&gt;</span>
+        </Link>
       </div>
     </div>
   );

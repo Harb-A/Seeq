@@ -5,19 +5,62 @@ import "../styles/NewPost.css";
 const NewPost = () => {
   const [title, setTitle] = useState("");
   const [position, setPosition] = useState("");
-  const [experience, setExperience] = useState("");
   const [skills, setSkills] = useState("");
   const [body, setBody] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("New post data:", {
+
+    // Basic form validation
+    if (!title || !position || !skills || !body) {
+      alert("Please fill in all fields");
+      return;
+    }
+
+    // Retrieve the bearer token from local storage
+    const authToken = localStorage.getItem("accessToken");
+
+    if (!authToken) {
+      alert("Authentication token not found. Please log in.");
+      return;
+    }
+
+    // Prepare form data
+    const formData = {
       title,
       position,
-      experience,
       skills,
       body,
-    });
+    };
+
+    try {
+      // Make a request to the DUMMYAPI with the bearer token and form data
+      const response = await fetch("DUMMYAPI_URL", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      // Clear form fields
+      setTitle("");
+      setPosition("");
+      setSkills("");
+      setBody("");
+
+      // Provide additional feedback to the user, e.g., display a success message
+      alert("Post created successfully!");
+    } catch (error) {
+      console.error("Error creating post:", error);
+      // Provide feedback to the user about the error, e.g., display an error message
+      alert("An error occurred while creating the post. Please try again.");
+    }
   };
 
   return (
@@ -40,13 +83,6 @@ const NewPost = () => {
             value={position}
             onChange={(e) => setPosition(e.target.value)}
             placeholder="Position"
-            className="new-post-input"
-          />
-          <input
-            type="text"
-            value={experience}
-            onChange={(e) => setExperience(e.target.value)}
-            placeholder="Years of Experience"
             className="new-post-input"
           />
           <input

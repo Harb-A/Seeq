@@ -11,13 +11,22 @@
   flex: 1;
   margin: 5px;
   cursor: pointer;
+  padding: 10px 15px;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  background-color: #102a54;
+  align-self: center;
+  text-align: center;
 }
 
 .active {
   color: #ffffff;
   text-decoration: underline;
 }
-.appliactions-pagination-container {
+.applications-pagination-container {
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -26,4 +35,23 @@
   margin-bottom: 10px;
   margin: auto;
   width: 30%;
+}
+
+.applications-pagination-container button {
+  background-color: #102a54;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.applications-pagination-container button:disabled {
+  background-color: #aaa;
+  cursor: not-allowed;
 }
