@@ -10,7 +10,7 @@ const { DATABASE_URI, PORT } = process.env;
 
 // Connect to <link>MongoDB</link>
 mongoose
-  .connect(DATABASE_URI)
+  .connect(DATABASE_URI, { w: 'majority' })
   .then(() => {
     console.log("Connected to MongoDB");
     // Start the <link>Express.js</link> server after successful database connection
