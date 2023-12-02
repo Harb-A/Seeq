@@ -15,7 +15,7 @@ mongoose
     console.log("Connected to MongoDB");
     // Start the <link>Express.js</link> server after successful database connection
     app.listen(PORT, () => {
-      console.log("Server started on port 3000");
+      console.log(`Server started on port ${PORT}` );
     });
   })
   .catch((error) => {
@@ -26,3 +26,4 @@ app.use(express.json());
 
 app.use("/users", require("./Routes/UserRoutes"));
 app.use("/auth", require("./Routes/AuthRoutes"));
+app.use("/posts", require("./Routes/PostRoutes"));

@@ -4,7 +4,7 @@ const jwt = require("jsonwebtoken");
 const asyncHandler = require("express-async-handler");
 // app.use(express.json());
 
-// route link (http://localhost:3000/auth/)
+// route link (http://localhost:4000/auth/)
 
 const login = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
