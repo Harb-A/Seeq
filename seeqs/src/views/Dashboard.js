@@ -1,100 +1,56 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Taskbar from "../components/Taskbar.js";
 import JobCard from "../components/JobCard.js";
 import "../styles/Dashboard.css";
+import { useNavigate } from "react-router-dom";
 
 const Dashboard = () => {
+  //Check if the local storage contains the authentication token.
+  //If the authentication token is present, allow the user to access the dashboard
+  //If the authenticaion token is not present, send the user back to the login page.
+  const navigate = useNavigate();
+  useEffect(() => {
+    const accessToken = localStorage.getItem("accessToken");
+    if (!accessToken) {
+      navigate("/");
+    }
+  });
+
+  //Use state to keep track of the allPostData
+  const [allPostsData, setAllPostsData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [showRecommendedPosts, setShowRecommendedPosts] = useState(false);
 
-  // Dummy Array 1
-  const allPostsData = [
-    {
-      id: 1,
-      title: "Job 1",
-      body: [
-        "Exciting Opportunity: Job 1",
-        "Are you ready for a dynamic role that challenges your skills and fosters professional growth?",
-        "Join our team as we embark on innovative projects that make a real impact.",
-        "As a key contributor, you will play a crucial part in shaping the future of our company.",
-      ],
-    },
-    {
-      id: 2,
-      title: "Job 2",
-      body: [
-        "Unleash Your Potential: Job 2",
-        "Dive into the world of Job 2, where creativity meets technical excellence.",
-        "We are seeking individuals who are passionate about their craft and eager to contribute to a collaborative and forward-thinking environment.",
-        "Take the next step in your career journey with us!",
-      ],
-    },
-    {
-      id: 3,
-      title: "Job 3",
-      body: [
-        "Chart Your Course: Job 3",
-        "Imagine a workplace where your ideas are not only heard but celebrated.",
-        "Job 3 offers you the chance to be part of a team that values innovation and encourages personal and professional development.",
-        "Your journey towards success begins here.",
-      ],
-    },
-    {
-      id: 4,
-      title: "Job 4",
-      body: [
-        "Innovate and Elevate: Job 4",
-        "Join us in pushing the boundaries of what's possible.",
-        "Job 4 is more than just a job; it's an invitation to be a trailblazer in your field.",
-        "Challenge yourself, grow with us, and let's create a future full of accomplishments together.",
-      ],
-    },
-    {
-      id: 5,
-      title: "Job 5",
-      body: [
-        "Beyond the Ordinary: Job 5",
-        "Are you ready to break free from the ordinary?",
-        "Job 5 welcomes individuals who are not afraid to explore new horizons and embrace challenges.",
-        "Your unique skills are what we need to make a difference. Join us and let's redefine success together.",
-      ],
-    },
-    {
-      id: 6,
-      title: "Job 6",
-      body: [
-        // Description for Job 6
-      ],
-    },
-    {
-      id: 7,
-      title: "Job 7",
-      body: [
-        // Description for Job 7
-      ],
-    },
-    {
-      id: 8,
-      title: "Job 8",
-      body: [
-        // Description for Job 8
-      ],
-    },
-    {
-      id: 9,
-      title: "Job 9",
-      body: [
-        // Description for Job 9
-      ],
-    },
-    {
-      id: 10,
-      title: "Job 10",
-      body: [
-        // Description for Job 10
-      ],
-    },
-  ];
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const accessToken = localStorage.getItem("accessToken");
+        const response = await fetch(
+          `http://localhost:4000/posts/?page=${currentPage}&limit=${maxPerPage}`,
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+              // Add other headers if needed
+            },
+          }
+        );
+
+        // Error response
+        if (!response.ok) {
+          console.error("Error fetching data. Status:", response.status);
+          return;
+        }
+
+        const data = await response.json();
+
+        setAllPostsData(data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, [currentPage]);
 
   // Dummy Array 2
   const recommendedPostsData = [
@@ -180,9 +136,7 @@ const Dashboard = () => {
 
   // Pagination logic
   const maxPerPage = 5;
-  const indexOfLastPost = currentPage * maxPerPage;
-  const indexOfFirstPost = indexOfLastPost - maxPerPage;
-  const displayedJobPosts = jobPosts.slice(indexOfFirstPost, indexOfLastPost);
+  const displayedJobPosts = jobPosts;
 
   const goToNextPage = () => {
     setCurrentPage((prevPage) => prevPage + 1);

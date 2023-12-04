@@ -49,6 +49,9 @@ const login = asyncHandler(async (req, res) => {
   });
 
   // Send accessToken containing email and roles
+  res.header("Access-Control-Allow-Origin", "http://localhost:3000");
+  res.header("Access-Control-Allow-Credentials", true);
+
   res.json({ accessToken });
 });
 
@@ -80,7 +83,7 @@ const refresh = (req, res) => {
         {
           UserInfo: {
             email: foundUser.email,
-            id: foundUser.id
+            id: foundUser.id,
           },
         },
         process.env.ACCESS_TOKEN_SECRET,
@@ -93,7 +96,7 @@ const refresh = (req, res) => {
 };
 
 // route link (http://localhost:4000/auth/logout)
-const logout = (req, res, del=0) => {
+const logout = (req, res, del = 0) => {
   const cookies = req.cookies;
   if (!cookies?.jwt) return res.sendStatus(204); //No content
   res.clearCookie("jwt", { httpOnly: true, sameSite: "None", secure: true });
@@ -102,9 +105,9 @@ const logout = (req, res, del=0) => {
   res.json({ message: "Cookie cleared" });
 };
 
-
 const register = asyncHandler(async (req, res) => {
   const { firstName, lastName, email, phone, password } = req.body;
+  console.log(req.body);
 
   // Check if user already exists
   const existingUser = await User.findOne({ email });
@@ -113,7 +116,7 @@ const register = asyncHandler(async (req, res) => {
   }
 
   // Hash the password
-  const hashedPassword = await bcrypt.hash(password);
+  const hashedPassword = await bcrypt.hash(password, 10);
 
   // Create a new user
   const newUser = new User({
@@ -138,8 +141,5 @@ const deleteUser = asyncHandler(async (req, res) => {
 
   return logout(req, res, 1);
 });
-
-
-
 
 module.exports = { login, refresh, logout, register, deleteUser };

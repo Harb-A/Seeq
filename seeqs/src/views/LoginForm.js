@@ -52,7 +52,7 @@ const LoginForm = () => {
 
     //Login api to check if user details are correct
     try {
-      const response = await fetch("http://localhost:4000/api/auth/", {
+      const response = await fetch("http://localhost:4000/auth", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -73,6 +73,7 @@ const LoginForm = () => {
 
       //Store JWT token in local storage
       localStorage.setItem("accessToken", accessToken);
+      navigate("/dashboard");
     } catch (error) {
       console.log(error);
       alert("An error occurred. Please try again.");

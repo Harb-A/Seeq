@@ -83,7 +83,27 @@ const RegisterForm = () => {
       return;
     }
 
-    console.log("Registration successful");
+    //Send registration logic to API
+    const registrationEndpoint = "http://localhost:4000/auth/register/";
+    const userData = { firstName, lastName, email, phoneNumber, password };
+    console.log(userData);
+
+    fetch(registrationEndpoint, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(userData),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("Registration successful:", data);
+        // Handle the response data as needed
+      })
+      .catch((error) => {
+        console.error("Error during registration:", error);
+        // Handle errors
+      });
   };
 
   return (
