@@ -68,41 +68,45 @@ const NewPost = () => {
       <Taskbar />
 
       <div className="new-post-container">
-        <h2 className="new-post-title">Create a New Post</h2>
-        <form onSubmit={handleSubmit}>
+        <div className="new-post">
+          {" "}
+          <h1 className="new-post-title">Create a New Post</h1>
+          <label>Title</label>
           <input
             type="text"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            placeholder="Title"
             className="new-post-input"
           />
-          <br />
+          <label>Position</label>
           <input
             type="text"
             value={position}
             onChange={(e) => setPosition(e.target.value)}
-            placeholder="Position"
             className="new-post-input"
           />
+          <label>Important skills: skillA, skillB, skillC...</label>
           <input
             type="text"
             value={skills}
             onChange={(e) => setSkills(e.target.value)}
-            placeholder="Important skills: skillA, skillB, skillC..."
             className="new-post-input"
           />
+          <label>Description</label>
           <textarea
             value={body}
             onChange={(e) => setBody(e.target.value)}
-            placeholder="Description"
             className="new-post-textarea"
           />
           <br />
-          <button type="submit" className="new-post-button">
+          <button
+            type="submit"
+            className="new-post-button"
+            onClick={handleSubmit}
+          >
             Create Post
           </button>
-        </form>
+        </div>
       </div>
     </div>
   );

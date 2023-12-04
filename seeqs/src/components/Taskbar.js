@@ -7,6 +7,9 @@ const Taskbar = () => {
     <div className="taskbar">
       <div className="taskbar-title">Seeqs</div>
       <div className="taskbar-navigation-buttons">
+        <Link to="/dashboard" className="taskbar-navigation-button">
+          Dashboard
+        </Link>
         <Link to="/posts" className="taskbar-navigation-button">
           Posts
         </Link>

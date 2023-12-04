@@ -1,0 +1,64 @@
+.my-application {
+  width: 50%;
+  margin: auto;
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 10px;
+  box-sizing: border-box;
+  transition: all 0.3s ease;
+}
+
+.applicant-name {
+  font-size: 1.5rem;
+  text-align: left;
+}
+
+.applicant-email,
+.applicant-phone {
+  font-size: 1rem;
+  color: #555;
+  text-align: left;
+}
+
+.cover-letter-heading,
+.resume-heading {
+  font-size: 1.2rem;
+}
+
+.cover-letter-content {
+  font-size: 1rem;
+  line-height: 1.5;
+  color: #555;
+}
+
+.resume-link {
+  display: block;
+  margin-bottom: 10px;
+  color: #007bff;
+  text-decoration: none;
+}
+
+.action-buttons {
+  display: flex;
+  justify-content: row-reverse;
+}
+.action-buttons button {
+  margin-left: 5px;
+  padding: 10px 20px;
+  font-size: 1rem;
+  cursor: pointer;
+  border: none;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.delete-button {
+  background-color: #dc3545;
+  color: #fff;
+}
+
+.action-buttons button:hover {
+  text-decoration: underline;
+}

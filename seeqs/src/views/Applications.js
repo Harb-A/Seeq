@@ -4,6 +4,7 @@ import Taskbar from "../components/Taskbar.js";
 import "../styles/Applications.css";
 
 import ReceivedApplication from "../components/ReceivedApplication.js";
+import MyApplication from "../components/MyApplication.js";
 
 const Applications = () => {
   // Dummy array containing your job applications (later feed data from API)
@@ -208,7 +209,7 @@ const Applications = () => {
                 />
               ))
             : displayedApplications.map((application) => (
-                <ReceivedApplication
+                <MyApplication
                   key={application.id}
                   name={application.applicant.name}
                   email={application.applicant.email}

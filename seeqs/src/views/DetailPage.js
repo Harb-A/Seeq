@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
+import Taskbar from "../components/Taskbar";
 
 const DetailPage = () => {
   //Grab the ID of the post from the URL parameters
@@ -11,7 +12,6 @@ const DetailPage = () => {
   useEffect(() => {
     const authToken = localStorage.getItem("accessToken");
 
-    //Fetch from the post details from the API using the ID fo the post
     fetch(`DUMMYAPI_URL/${id}`, {
       headers: {
         Authorization: `Bearer ${authToken}`,
@@ -34,6 +34,7 @@ const DetailPage = () => {
 
   return (
     <div>
+      <Taskbar />
       <h2>{id}</h2>
       {/* Display detailed information and additional functions for the specific item */}
       {/* <h2>{itemData.title}</h2>
