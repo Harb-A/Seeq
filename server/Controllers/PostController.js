@@ -2,6 +2,7 @@ const { Mongoose } = require("mongoose");
 const mongoose = require("mongoose");
 const asyncHandler = require("express-async-handler");
 const Post = require("../Models/PostModel");
+// const { post } = require("../Routes/AuthRoutes");
 require("dotenv").config();
 
 // route link (http://localhost:4000/posts/)
@@ -42,4 +43,29 @@ const getUserPosts = asyncHandler(async (req, res) => {
   const posts = await Post.find({ _id: req.params.pId });
   res.json(posts);
 });
-module.exports = { getPosts, getMyPosts, getUserPosts, createPost };
+
+const deletePost = asyncHandler(async (req, res) => {
+  const postId = req.params.postId;
+  const post = await Post.findById(postId);
+
+  // Find the post by ID and delete it
+  console.log(post.user_id.toString());
+  console.log(req.user.id)
+  console.log(post.user_id.toString() === req.user.id)
+  if(post.user_id.toString() === req.user.id){
+  const post = await Post.findByIdAndDelete(postId);
+  }
+  else{
+    res.status(401);
+    throw new Error('You are not authorized to delete this post');
+  }
+
+  if (!post) {
+    res.status(404);
+    throw new Error('Post not found');
+  }
+
+  res.json({ message: "Post deleted successfully" });
+});
+
+module.exports = { getPosts, getMyPosts, getUserPosts, createPost, deletePost};
