@@ -189,7 +189,7 @@ const Dashboard = () => {
         <div>{`Page ${currentPage}`}</div>
         <button
           onClick={goToNextPage}
-          disabled={indexOfLastPost >= jobPosts.length}
+          disabled={displayedJobPosts.length < maxPerPage}
         >
           Next
         </button>
