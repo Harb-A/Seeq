@@ -1,4 +1,5 @@
 const { Mongoose } = require("mongoose");
+const mongoose = require("mongoose");
 const asyncHandler = require("express-async-handler");
 const Post = require("../Models/PostModel");
 require("dotenv").config();
@@ -19,7 +20,6 @@ const createPost = asyncHandler(async (req, res) => {
   const { title, position, skills, description, hidden } = req.body;
   // console.log(req.body);
   const userId = req.user.id; 
-  const mongoose = require("mongoose");
 
   const post = new Post({
     _id: new mongoose.Types.ObjectId(),
