@@ -68,4 +68,17 @@ const deletePost = asyncHandler(async (req, res) => {
   res.json({ message: "Post deleted successfully" });
 });
 
-module.exports = { getPosts, getMyPosts, getUserPosts, createPost, deletePost};
+const paginatedPosts = asyncHandler(async (req, res) => {
+  console.log(req.query.page);
+  const page = parseInt(req.query.page);
+  const limit = 5; // Set the limit to 5
+
+  const startIndex = (page - 1) * limit;
+  const endIndex = page * limit;
+
+  const posts = await Post.find({}).sort({ _id: 1 }).skip(startIndex).limit(limit);
+
+  res.json(posts);
+});
+
+module.exports = { getPosts, getMyPosts, getUserPosts, createPost, deletePost, paginatedPosts};
