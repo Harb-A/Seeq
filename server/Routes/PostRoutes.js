@@ -5,7 +5,8 @@ const {
   getMyPosts,
   getUserPosts,
   createPost,
-  deletePost
+  deletePost,
+  paginatedPosts
 } = require("../Controllers/PostController");
 const verifyJWT = require("../Middleware/VerifyJWT");
 
@@ -15,6 +16,8 @@ router.use(verifyJWT);
 router.route("/").get(getPosts);
 // route link (http://localhost:4000/posts/myposts)
 router.route("/myposts").get(getMyPosts);
+// route link (http://localhost:4000/posts/)
+router.route("/omak/posts").get(paginatedPosts);
 // route link (http://localhost:4000/posts/create)
 router.route("/create").post(createPost);
 // route link (http://localhost:4000/posts/:pId)
