@@ -16,7 +16,6 @@ const verifyJWT = (req, res, next) => {
     // console.log(req.user);
     next();
   });
-  console.log("this code is working");
 };
 
 module.exports = verifyJWT;
