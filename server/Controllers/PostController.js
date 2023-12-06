@@ -20,7 +20,7 @@ const getMyPosts = asyncHandler(async (req, res) => {
 const createPost = asyncHandler(async (req, res) => {
   const { title, position, skills, description, hidden } = req.body;
   // console.log(req.body);
-  const userId = req.user.id; 
+  const userId = req.user.id;
 
   const post = new Post({
     _id: new mongoose.Types.ObjectId(),
@@ -50,19 +50,18 @@ const deletePost = asyncHandler(async (req, res) => {
 
   // Find the post by ID and delete it
   console.log(post.user_id.toString());
-  console.log(req.user.id)
-  console.log(post.user_id.toString() === req.user.id)
-  if(post.user_id.toString() === req.user.id){
-  const post = await Post.findByIdAndDelete(postId);
-  }
-  else{
+  console.log(req.user.id);
+  console.log(post.user_id.toString() === req.user.id);
+  if (post.user_id.toString() === req.user.id) {
+    const post = await Post.findByIdAndDelete(postId);
+  } else {
     res.status(401);
-    throw new Error('You are not authorized to delete this post');
+    throw new Error("You are not authorized to delete this post");
   }
 
   if (!post) {
     res.status(404);
-    throw new Error('Post not found');
+    throw new Error("Post not found");
   }
 
   res.json({ message: "Post deleted successfully" });
@@ -76,9 +75,37 @@ const paginatedPosts = asyncHandler(async (req, res) => {
   const startIndex = (page - 1) * limit;
   const endIndex = page * limit;
 
-  const posts = await Post.find({}).sort({ _id: 1 }).skip(startIndex).limit(limit);
+  const posts = await Post.find({})
+    .sort({ _id: 1 })
+    .skip(startIndex)
+    .limit(limit);
 
   res.json(posts);
 });
 
-module.exports = { getPosts, getMyPosts, getUserPosts, createPost, deletePost, paginatedPosts};
+const hiding = asyncHandler(async (req, res) => {
+  const postId = req.params.pId;
+  const userId = req.user.id;
+console.log;
+  const post = await Post.findOne({ _id: postId, user_id: userId });
+
+  if (!post) {
+    res.status(404);
+    throw new Error('Post not found');
+  }
+
+  post.hidden = !post.hidden;
+  const updatedPost = await post.save();
+
+  return res.json(updatedPost);
+});
+
+module.exports = {
+  getPosts,
+  getMyPosts,
+  getUserPosts,
+  createPost,
+  deletePost,
+  paginatedPosts,
+  hiding,
+};
