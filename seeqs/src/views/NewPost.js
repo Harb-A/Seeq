@@ -35,7 +35,7 @@ const NewPost = () => {
 
     try {
       // Make a request to the DUMMYAPI with the bearer token and form data
-      const response = await fetch("DUMMYAPI_URL", {
+      const response = await fetch("http://localhost:4000/posts/create", {
         method: "POST",
         headers: {
           Authorization: `Bearer ${authToken}`,

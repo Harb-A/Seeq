@@ -9,10 +9,23 @@
   box-sizing: border-box;
   transition: all 0.3s ease;
 }
+.job-card-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+.job-card-header h3 {
+  color: #333;
+}
 
-.job-title {
-  font-size: 1.5rem;
-  text-align: right;
+.job-card-header p {
+  color: #666;
+}
+
+.important-skills {
+  color: #1c3263;
+  font-weight: bold;
+  margin-bottom: 10px;
 }
 
 .job-body {

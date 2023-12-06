@@ -15,9 +15,10 @@ const LoginForm = () => {
     setPassword(event.target.value);
   };
 
+  //useNavigate to be able to navigate to a different route of the website
   const navigate = useNavigate();
 
-  //Validate functions for email and password
+  //Validate functions of email and password
   const validateEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
@@ -26,7 +27,6 @@ const LoginForm = () => {
     if (password.length < 8 || password.length > 16) {
       return "Password must be between 8 and 16 characters";
     }
-
     if (!/[A-Z]/.test(password)) {
       return "Password must contain at least one capital letter";
     }
@@ -37,13 +37,11 @@ const LoginForm = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    //Validate the email
+    //Validate email and password
     if (!validateEmail(email)) {
       alert("Please enter a valid email address");
       return;
     }
-
-    //Validate the password
     const passwordValidationResult = validatePassword(password);
     if (passwordValidationResult !== "valid") {
       alert(passwordValidationResult);
@@ -85,6 +83,7 @@ const LoginForm = () => {
     navigate("/register");
   };
 
+  //Design
   return (
     <div className="login-form-container">
       <h2 className="login-form-container-title">Seeqs</h2>

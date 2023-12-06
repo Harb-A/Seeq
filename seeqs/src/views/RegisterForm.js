@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import "../styles/RegisterForm.css";
+import { useNavigate } from "react-router-dom";
 
 const RegisterForm = () => {
+  const navigate = useNavigate();
   //Use states for fName, lName, email, phoneNumber, Password
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -86,7 +88,6 @@ const RegisterForm = () => {
     //Send registration logic to API
     const registrationEndpoint = "http://localhost:4000/auth/register/";
     const userData = { firstName, lastName, email, phoneNumber, password };
-    console.log(userData);
 
     fetch(registrationEndpoint, {
       method: "POST",
@@ -95,14 +96,16 @@ const RegisterForm = () => {
       },
       body: JSON.stringify(userData),
     })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log("Registration successful:", data);
-        // Handle the response data as needed
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+      })
+      .then(() => {
+        navigate("/"); // navigate on successful registration
       })
       .catch((error) => {
         console.error("Error during registration:", error);
-        // Handle errors
       });
   };
 

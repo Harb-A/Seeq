@@ -18,19 +18,23 @@ const Dashboard = () => {
 
   //Use state to keep track of the allPostData
   const [allPostsData, setAllPostsData] = useState([]);
+
+  //Use state to keep track of the pagination to know what to send to the API
   const [currentPage, setCurrentPage] = useState(1);
+
+  //Use state to determine wheter to show recommendedPosts or just allPosts
   const [showRecommendedPosts, setShowRecommendedPosts] = useState(false);
 
+  //Fetch data for allPosts, one page at a time (Retrieve multiples of 5)
   useEffect(() => {
     const fetchData = async () => {
       try {
         const accessToken = localStorage.getItem("accessToken");
         const response = await fetch(
-          `http://localhost:4000/posts/?page=${currentPage}&limit=${maxPerPage}`,
+          `http://localhost:4000/posts/paging/?page=${currentPage}`,
           {
             headers: {
               Authorization: `Bearer ${accessToken}`,
-              // Add other headers if needed
             },
           }
         );
@@ -138,6 +142,7 @@ const Dashboard = () => {
   const maxPerPage = 5;
   const displayedJobPosts = jobPosts;
 
+  //State change for the currently displayed page
   const goToNextPage = () => {
     setCurrentPage((prevPage) => prevPage + 1);
   };
@@ -177,7 +182,7 @@ const Dashboard = () => {
       {/* Map data from predefined arrays to job card component and render them */}
       <div className="job-cards-container">
         {displayedJobPosts.map((post) => (
-          <JobCard key={post.id} post={post} />
+          <JobCard key={post._id} post={post} />
         ))}
       </div>
 

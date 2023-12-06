@@ -12,7 +12,7 @@ const DetailPage = () => {
   useEffect(() => {
     const authToken = localStorage.getItem("accessToken");
 
-    fetch(`DUMMYAPI_URL/${id}`, {
+    fetch(`http://localhost:4000/posts/${id}`, {
       headers: {
         Authorization: `Bearer ${authToken}`,
         "Content-Type": "application/json",
@@ -26,6 +26,7 @@ const DetailPage = () => {
       })
       .then((data) => {
         setItemData(data);
+        console.log(data);
       })
       .catch((error) => {
         console.error("Error fetching item data:", error);

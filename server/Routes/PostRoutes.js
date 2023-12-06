@@ -6,7 +6,7 @@ const {
   getUserPosts,
   createPost,
   deletePost,
-  paginatedPosts
+  paginatedPosts,
 } = require("../Controllers/PostController");
 const verifyJWT = require("../Middleware/VerifyJWT");
 

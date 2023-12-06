@@ -1,7 +1,7 @@
 import React from "react";
 import "../styles/PublicPost.css";
 
-const PublicPost = ({ title, position, importantSkills, description }) => {
+const PublicPost = ({ post }) => {
   const toggleHidden = () => {
     console.log("Post hidden");
   };
@@ -9,11 +9,11 @@ const PublicPost = ({ title, position, importantSkills, description }) => {
   return (
     <div className="public-post">
       <div className="post-header">
-        <h3>{title}</h3>
-        <p>{position}</p>
+        <h3>{post.title}</h3>
+        <p>{post.position}</p>
       </div>
-      <p>{description}</p>
-      <div className="important-skills">{importantSkills}</div>
+      <p>{post.description}</p>
+      <div className="important-skills">{post.skills}</div>
       <div className="public-post-buttons">
         <button onClick={toggleHidden} className="public-post-hide-button">
           Hide

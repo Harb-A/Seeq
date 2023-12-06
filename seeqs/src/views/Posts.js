@@ -1,5 +1,5 @@
 import React from "react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import PublicPost from "../components/PublicPost.js";
 import HiddenPost from "../components/HiddenPost.js";
@@ -8,51 +8,39 @@ import { Link } from "react-router-dom";
 import "../styles/Posts.css";
 
 const Posts = () => {
-  // Dummy Array containing public job posts (later feed data from API)
-  const jobPosts = [
-    {
-      id: 1,
-      title: "Job Post 1",
-      position: "Position 1",
-      importantSkills: "Skills 1",
-      description: "Description 1",
-    },
-    {
-      id: 2,
-      title: "Job Post 2",
-      position: "Position 2",
-      importantSkills: "Skills 2",
-      description: "Description 2",
-    },
-    {
-      id: 3,
-      title: "Job Post 3",
-      position: "Position 3",
-      importantSkills: "Skills 3",
-      description: "Description 3",
-    },
-    {
-      id: 4,
-      title: "Job Post 4",
-      position: "Position 4",
-      importantSkills: "Skills 4",
-      description: "Description 4",
-    },
-    {
-      id: 5,
-      title: "Job Post 5",
-      position: "Position 5",
-      importantSkills: "Skills 5",
-      description: "Description 5",
-    },
-    {
-      id: 6,
-      title: "Job Post 6",
-      position: "Position 6",
-      importantSkills: "Skills 6",
-      description: "Description 6",
-    },
-  ];
+  // Use state to keep track of public posts
+  const [publicPostsData, setPublicPostsData] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const accessToken = localStorage.getItem("accessToken");
+        const response = await fetch("http://localhost:4000/posts/myposts", {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            "Content-Type": "application/json",
+          },
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          // Assuming the API returns an array of job posts and hidden posts
+          setPublicPostsData(data);
+        } else {
+          console.error(
+            "Failed to fetch data:",
+            response.status,
+            response.statusText
+          );
+        }
+      } catch (error) {
+        console.error("Error during fetch:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   // Dummy Array containing hidden job posts (later feed data from API)
   const hiddenPosts = [
@@ -110,7 +98,7 @@ const Posts = () => {
   const indexOfFirstPost = indexOfLastPost - maxPerPage;
 
   //Depending on state, select the corresponding list of posts
-  const postsToShow = showHiddenPosts ? hiddenPosts : jobPosts;
+  const postsToShow = showHiddenPosts ? hiddenPosts : publicPostsData;
   const displayedPosts = postsToShow.slice(indexOfFirstPost, indexOfLastPost);
 
   const goToNextPage = () => {
@@ -160,13 +148,7 @@ const Posts = () => {
                 />
               ))
             : displayedPosts.map((post) => (
-                <PublicPost
-                  key={post.id}
-                  title={post.title}
-                  position={post.position}
-                  importantSkills={post.importantSkills}
-                  description={post.description}
-                />
+                <PublicPost key={post.id} post={post} />
               ))}
         </div>
 
