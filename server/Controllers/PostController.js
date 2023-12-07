@@ -224,7 +224,7 @@ const reject = asyncHandler(async (req, res) => {
 
 const deleteApplication = asyncHandler(async (req, res) => {
   const postId = req.params.pId;
-  const userId = req.user._id; // Assuming req.user._id contains the id of the current user
+  const userId = req.user.id; // Assuming req.user._id contains the id of the current user
 
   const post = await Post.findById(postId);
 
