@@ -130,6 +130,130 @@ console.log;
   return res.json(updatedPost);
 });
 
+const apply = asyncHandler(async (req, res) => {
+  const postId = req.params.pId;
+  const userId = req.user.id; 
+
+  const post = await Post.findById(postId);
+
+  if (!post) {
+    res.status(404);
+    throw new Error('Post not found');
+  }
+
+  const existingApplication = post.applications.find(app => app.user_id.toString() === userId.toString());
+
+  if (existingApplication) {
+    return res.status(400).json({ message: 'You have already applied to this post' });
+  }
+
+  const newApplication = {
+    user_id: userId,
+    cover_letter: req.body.cover_letter, // Assuming the cover letter is sent in the request body
+    accepted: 0
+  };
+
+  post.applications.push(newApplication);
+  const updatedPost = await post.save();
+
+  return res.json(updatedPost);
+});
+
+//this function takes the post id and the applicant id and accepts the applicant, also it checks if the user that made the post is the one accepting the application
+const accept = asyncHandler(async (req, res) => {
+  const postId = req.params.pId;
+  const applicantId = req.params.aId;
+  const userId = req.user.id; 
+
+  const post = await Post.findById(postId);
+
+  if (!post) {
+    res.status(404);
+    throw new Error('Post not found');
+  }
+
+  // Check if the user that made the post is the one accepting the application
+  if (post.user_id.toString() !== userId.toString()) {
+    res.status(403);
+    throw new Error('You do not have permission to accept this application');
+  }
+
+  const application = post.applications.find(app => app.user_id.toString() === applicantId);
+
+  if (!application) {
+    res.status(404);
+    throw new Error('Application not found');
+  }
+
+  application.accepted = 1;
+  const updatedPost = await post.save();
+
+  return res.json(updatedPost);
+});
+
+const reject = asyncHandler(async (req, res) => {
+  const postId = req.params.pId;
+  const applicantId = req.params.aId;
+  const userId = req.user.id; // Assuming req.user._id contains the id of the current user
+
+  const post = await Post.findById(postId);
+
+  if (!post) {
+    res.status(404);
+    throw new Error('Post not found');
+  }
+
+  // Check if the user that made the post is the one rejecting the application
+  if (post.user_id.toString() !== userId.toString()) {
+    res.status(403);
+    throw new Error('You do not have permission to reject this application');
+  }
+
+  const application = post.applications.find(app => app.user_id.toString() === applicantId);
+
+  if (!application) {
+    res.status(404);
+    throw new Error('Application not found');
+  }
+
+  application.accepted = -1;
+  const updatedPost = await post.save();
+
+  return res.json(updatedPost);
+});
+
+const deleteApplication = asyncHandler(async (req, res) => {
+  const postId = req.params.pId;
+  const userId = req.user._id; // Assuming req.user._id contains the id of the current user
+
+  const post = await Post.findById(postId);
+
+  if (!post) {
+    res.status(404);
+    throw new Error('Post not found');
+  }
+
+  const application = post.applications.find(app => app.user_id.toString() === userId.toString());
+
+  if (!application) {
+    res.status(404);
+    throw new Error('Application not found');
+  }
+
+  // Check if the user that made the application is the one deleting it
+  if (application.user_id.toString() !== userId.toString()) {
+    res.status(403);
+    throw new Error('You do not have permission to delete this application');
+  }
+
+  // Remove the application from the applications array
+  post.applications.pull(application);
+  const updatedPost = await post.save();
+
+  return res.json(updatedPost);
+});
+
+
 module.exports = {
   getPosts,
   getMyPosts,
@@ -140,4 +264,8 @@ module.exports = {
   paginatedPublicPosts,
   paginatedHiddenPosts,
   hiding,
+  apply,
+  accept,
+  reject,
+  deleteApplication
 };
