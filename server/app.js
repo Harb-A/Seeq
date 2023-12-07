@@ -19,11 +19,7 @@ app.use(cors(corsOptions));
 
 // Connect to MongoDB
 mongoose
-  .connect(DATABASE_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    writeConcern: { w: true },
-  })
+  .connect(DATABASE_URI, { useNewUrlParser: true, useUnifiedTopology: true, writeConcern: { w: true } })
   .then(() => {
     console.log("Connected to MongoDB");
     // Start the Express.js server after successful database connection

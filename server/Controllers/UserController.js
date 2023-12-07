@@ -3,10 +3,22 @@ const asyncHandler = require("express-async-handler");
 const User = require("../Models/UserModel");
 require("dotenv").config();
 const express = require("express");
-
+//return all users that are noq the current user
 const getUsers = asyncHandler(async (req, res) => {
   const users = await User.find({ _id: { $ne: req.user.id } });
   return res.json(users);
+});
+
+//return current user
+const getUser = asyncHandler(async (req, res) => {
+
+  const user = await User.findById(req.user.id);
+
+  if (!user) {
+    return res.status(404).json({ message: "User not found" });
+  }
+
+  return res.json(user);
 });
 
 const getPost = asyncHandler(async (req, res) => {
@@ -44,4 +56,4 @@ const updateUser = asyncHandler(async (req, res) => {
   return res.json(user);
 });
 
-module.exports = { getUsers, getPost, updateUser };
+module.exports = { getUsers, getUser, getPost, updateUser };
