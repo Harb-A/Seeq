@@ -9,11 +9,6 @@ router.use(verifyJWT);
 router.route("/").get(getUsers);
 // route link (http://localhost:4000/users/current)
 router.route("/current").get(getUser);
-
-// route link (http://localhost:4000/users/getposts)
-// router.route("/getposts").get(getPosts);
-// route link (http://localhost:4000/users/getpost/:pId)
-// router.route("/getpost/:pId").get(getPost);
 // // route link (http://localhost:4000/users/update)
 router.route("/update").put(updateUser);
 module.exports = router;

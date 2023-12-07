@@ -2,7 +2,8 @@ const mongoose = require('mongoose');
 
 const applicationSchema = new mongoose.Schema({
   user_id: mongoose.Schema.Types.ObjectId,
-  cover_letter: String
+  cover_letter: String,
+  accepted: Number
 });
 
 const postSchema = new mongoose.Schema({
