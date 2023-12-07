@@ -7,6 +7,8 @@ const {
   createPost,
   deletePost,
   paginatedPosts,
+  paginatedPublicPosts,
+  paginatedHiddenPosts,
   hiding
 } = require("../Controllers/PostController");
 const verifyJWT = require("../Middleware/VerifyJWT");
@@ -21,6 +23,12 @@ router.route("/myposts").get(getMyPosts);
 
 // route link (http://localhost:4000/posts/paging)
 router.route("/paging").get(paginatedPosts);
+
+// route link (http://localhost:4000/posts/paging/public)
+router.route("/paging/public").get(paginatedPosts);
+
+// route link (http://localhost:4000/posts/paging/hidden)
+router.route("/paging/hidden").get(paginatedPosts);
 
 // route link (http://localhost:4000/posts/create)
 router.route("/create").post(createPost);
