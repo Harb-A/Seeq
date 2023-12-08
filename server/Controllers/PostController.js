@@ -2,6 +2,7 @@ const { Mongoose } = require("mongoose");
 const mongoose = require("mongoose");
 const asyncHandler = require("express-async-handler");
 const Post = require("../Models/PostModel");
+const User = require("../Models/UserModel");
 // const { post } = require("../Routes/AuthRoutes");
 require("dotenv").config();
 
@@ -265,6 +266,56 @@ const deleteApplication = asyncHandler(async (req, res) => {
   return res.json(updatedPost);
 });
 
+const getMyApplications = asyncHandler(async (req, res) => {
+  const userId = req.user.id; 
+
+  // Find all posts
+  const posts = await Post.find({});
+
+  if (!posts) {
+    res.status(404);
+    throw new Error('Posts not found');
+  }
+
+  // Filter out other users' applications
+  const userPosts = posts.map(post => {
+    const userApplications = post.applications.filter(app => app.user_id.toString() === userId.toString());
+    return { ...post._doc, applications: userApplications };
+  });
+
+  return res.json(userPosts);
+});
+
+const postsWithApps = asyncHandler(async (req, res) => {
+  const userId = req.user.id; // Assuming req.user._id contains the id of the current user
+
+  // Find all posts of the current user
+  const posts = await Post.find({ user_id: userId });
+
+  if (!posts) {
+    res.status(404);
+    throw new Error('Posts not found');
+  }
+
+  // Filter out posts without applications
+  const postsWithApplications = posts.filter(post => post.applications.length > 0);
+
+  // Populate user details in applications
+  const populatedPosts = await Promise.all(postsWithApplications.map(async post => {
+    post = post.toObject();
+    post.applications = await Promise.all(post.applications.map(async app => {
+      const user = await User.findById(app.user_id).select('firstName lastName email phone resume');
+      return { ...app, firstName: user.firstName, lastName: user.lastName, email: user.email, phone: user.phone, resume: user.resume };
+    }));
+    return post;
+  }));
+
+  return res.json(populatedPosts);
+});
+
+
+
+
 module.exports = {
   getPosts,
   getMyPosts,
@@ -279,4 +330,6 @@ module.exports = {
   accept,
   reject,
   deleteApplication,
+  getMyApplications,
+  postsWithApps,
 };
