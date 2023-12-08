@@ -13,7 +13,9 @@ const {
   apply,
   accept,
   reject,
-  deleteApplication
+  deleteApplication,
+  getMyApplications,
+  postsWithApps
 } = require("../Controllers/PostController");
 const verifyJWT = require("../Middleware/VerifyJWT");
 
@@ -43,13 +45,23 @@ router.route("/hiding/:pId").put(hiding);
 // route link (http://localhost:4000/posts/:pId/apply)
 router.route("/:pId/apply").post(apply);
 
+router.route("/:pId/applications/delete").delete(deleteApplication);
+
+// route link (http://localhost:4000/posts/myapplications)
+router.route("/myapplications").get(getMyApplications);
+
+// route link (http://localhost:4000/posts/myapplications)
+router.route("/myapplications").get(getMyApplications);
+
+// route link (http://localhost:4000/posts/postsWithApps)
+router.route("/postsWithApps").get(postsWithApps);
+
 // route link (http://localhost:4000/posts/:pId/applications/:aId/accept)
 router.route("/:pId/applications/:aId/accept").put(accept);
 
 // route link (http://localhost:4000/posts/:pId/applications/:aId/reject)
 router.route("/:pId/applications/:aId/reject").put(reject);
 
-router.route("/:pId/applications/delete").delete(deleteApplication);
 
 // route link (http://localhost:4000/posts/:pId)
 router.route("/:pId").get(getUserPosts);
