@@ -84,19 +84,21 @@ const paginatedPosts = asyncHandler(async (req, res) => {
 });
 const paginatedPublicPosts = asyncHandler(async (req, res) => {
   console.log(req.query.page);
+  const userId = req.user.id;
   const page = parseInt(req.query.page);
   const limit = 5; // Set the limit to 5
 
   const startIndex = (page - 1) * limit;
   const endIndex = page * limit;
 
-  const posts = await Post.find({ hidden: false })
+  const posts = await Post.find({ hidden: false, user_id: userId })
     .sort({ _id: 1 })
     .skip(startIndex)
     .limit(limit);
 
   res.json(posts);
 });
+
 const paginatedHiddenPosts = asyncHandler(async (req, res) => {
   console.log(req.query.page);
   const page = parseInt(req.query.page);
@@ -105,7 +107,7 @@ const paginatedHiddenPosts = asyncHandler(async (req, res) => {
   const startIndex = (page - 1) * limit;
   const endIndex = page * limit;
 
-  const posts = await Post.find({ hidden: true })
+  const posts = await Post.find({ hidden: true, user_id: userId })
     .sort({ _id: 1 })
     .skip(startIndex)
     .limit(limit);
