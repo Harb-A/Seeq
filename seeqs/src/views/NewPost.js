@@ -6,13 +6,18 @@ const NewPost = () => {
   const [title, setTitle] = useState("");
   const [position, setPosition] = useState("");
   const [skills, setSkills] = useState("");
-  const [body, setBody] = useState("");
+  const [description, setDescription] = useState("");
+
+  const handleSkillChange = (e) => {
+    const skillsArray = e.target.value.split(",").map((skill) => skill.trim());
+    setSkills(skillsArray);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     // Basic form validation
-    if (!title || !position || !skills || !body) {
+    if (!title || !position || !skills || !description) {
       alert("Please fill in all fields");
       return;
     }
@@ -30,7 +35,7 @@ const NewPost = () => {
       title,
       position,
       skills,
-      body,
+      description,
     };
 
     try {
@@ -52,7 +57,7 @@ const NewPost = () => {
       setTitle("");
       setPosition("");
       setSkills("");
-      setBody("");
+      setDescription("");
 
       // Provide additional feedback to the user, e.g., display a success message
       alert("Post created successfully!");
@@ -89,13 +94,13 @@ const NewPost = () => {
           <input
             type="text"
             value={skills}
-            onChange={(e) => setSkills(e.target.value)}
+            onChange={handleSkillChange}
             className="new-post-input"
           />
           <label>Description</label>
           <textarea
-            value={body}
-            onChange={(e) => setBody(e.target.value)}
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
             className="new-post-textarea"
           />
           <br />

@@ -13,7 +13,7 @@ const PublicPost = ({ post }) => {
         <p>{post.position}</p>
       </div>
       <p>{post.description}</p>
-      <div className="important-skills">{post.skills}</div>
+      <div className="important-skills">{post.skills.join(", ")}</div>
       <div className="public-post-buttons">
         <button onClick={toggleHidden} className="public-post-hide-button">
           Hide

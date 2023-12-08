@@ -27,6 +27,7 @@ const Posts = () => {
           const data = await response.json();
           // Assuming the API returns an array of job posts and hidden posts
           setPublicPostsData(data);
+          console.log(data);
         } else {
           console.error(
             "Failed to fetch data:",
@@ -140,16 +141,17 @@ const Posts = () => {
           {showHiddenPosts
             ? displayedPosts.map((post) => (
                 <HiddenPost
-                  key={post.id}
+                  key={post._id}
                   title={post.title}
                   position={post.position}
                   importantSkills={post.importantSkills}
                   description={post.description}
                 />
               ))
-            : displayedPosts.map((post) => (
-                <PublicPost key={post.id} post={post} />
-              ))}
+            : displayedPosts.map((post) => {
+                console.log(post);
+                return <PublicPost key={post._id} post={post} />;
+              })}
         </div>
 
         {/* Pagination bar to navigate pages of the posts if more than 5 */}
