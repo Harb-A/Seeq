@@ -11,7 +11,7 @@ const EditProfile = () => {
     firstName: "",
     lastName: "",
     email: "",
-    phoneNumber: "",
+    phone: "",
   });
 
   useEffect(() => {
@@ -25,7 +25,7 @@ const EditProfile = () => {
           return;
         }
 
-        const response = await fetch("http://localhost:4000/users/", {
+        const response = await fetch("http://localhost:4000/users/current", {
           headers: {
             Authorization: `Bearer ${accessToken}`,
             "Content-Type": "application/json",
@@ -34,6 +34,7 @@ const EditProfile = () => {
 
         if (response.ok) {
           const userData = await response.json();
+          console.log(userData);
           setFormData(userData);
         } else {
           console.error("Error fetching user data:", response.status);
@@ -53,13 +54,23 @@ const EditProfile = () => {
 
   const handleSaveChanges = async () => {
     try {
+      const authToken = localStorage.getItem("accessToken");
+
+      const updatedUserData = {
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        email: formData.email,
+        phone: formData.phone,
+      };
+
       // Save editted changes using the API
-      const response = await fetch("API_ENDPOINT/user", {
+      const response = await fetch("http://localhost:4000/users/update", {
         method: "PUT",
         headers: {
+          Authorization: `Bearer ${authToken}`,
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(updatedUserData),
       });
 
       if (response.ok) {
@@ -119,7 +130,7 @@ const EditProfile = () => {
               type="tel"
               id="phoneNumber"
               name="phoneNumber"
-              value={formData.phoneNumber}
+              value={formData.phone}
               onChange={handleInputChange}
               readOnly={!editMode}
             />

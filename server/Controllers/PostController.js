@@ -30,7 +30,7 @@ const createPost = asyncHandler(async (req, res) => {
     skills,
     description,
     applications: [],
-    hidden: false
+    hidden: false,
   });
 
   await post.save();
@@ -90,7 +90,7 @@ const paginatedPublicPosts = asyncHandler(async (req, res) => {
   const startIndex = (page - 1) * limit;
   const endIndex = page * limit;
 
-  const posts = await Post.find({hidden: true})
+  const posts = await Post.find({ hidden: false })
     .sort({ _id: 1 })
     .skip(startIndex)
     .limit(limit);
@@ -105,7 +105,7 @@ const paginatedHiddenPosts = asyncHandler(async (req, res) => {
   const startIndex = (page - 1) * limit;
   const endIndex = page * limit;
 
-  const posts = await Post.find({hidden: false})
+  const posts = await Post.find({ hidden: true })
     .sort({ _id: 1 })
     .skip(startIndex)
     .limit(limit);
@@ -116,12 +116,12 @@ const paginatedHiddenPosts = asyncHandler(async (req, res) => {
 const hiding = asyncHandler(async (req, res) => {
   const postId = req.params.pId;
   const userId = req.user.id;
-console.log;
+  console.log;
   const post = await Post.findOne({ _id: postId, user_id: userId });
 
   if (!post) {
     res.status(404);
-    throw new Error('Post not found');
+    throw new Error("Post not found");
   }
 
   post.hidden = !post.hidden;
@@ -132,25 +132,29 @@ console.log;
 
 const apply = asyncHandler(async (req, res) => {
   const postId = req.params.pId;
-  const userId = req.user.id; 
+  const userId = req.user.id;
 
   const post = await Post.findById(postId);
 
   if (!post) {
     res.status(404);
-    throw new Error('Post not found');
+    throw new Error("Post not found");
   }
 
-  const existingApplication = post.applications.find(app => app.user_id.toString() === userId.toString());
+  const existingApplication = post.applications.find(
+    (app) => app.user_id.toString() === userId.toString()
+  );
 
   if (existingApplication) {
-    return res.status(400).json({ message: 'You have already applied to this post' });
+    return res
+      .status(400)
+      .json({ message: "You have already applied to this post" });
   }
 
   const newApplication = {
     user_id: userId,
     cover_letter: req.body.cover_letter, // Assuming the cover letter is sent in the request body
-    accepted: 0
+    accepted: 0,
   };
 
   post.applications.push(newApplication);
@@ -163,26 +167,28 @@ const apply = asyncHandler(async (req, res) => {
 const accept = asyncHandler(async (req, res) => {
   const postId = req.params.pId;
   const applicantId = req.params.aId;
-  const userId = req.user.id; 
+  const userId = req.user.id;
 
   const post = await Post.findById(postId);
 
   if (!post) {
     res.status(404);
-    throw new Error('Post not found');
+    throw new Error("Post not found");
   }
 
   // Check if the user that made the post is the one accepting the application
   if (post.user_id.toString() !== userId.toString()) {
     res.status(403);
-    throw new Error('You do not have permission to accept this application');
+    throw new Error("You do not have permission to accept this application");
   }
 
-  const application = post.applications.find(app => app.user_id.toString() === applicantId);
+  const application = post.applications.find(
+    (app) => app.user_id.toString() === applicantId
+  );
 
   if (!application) {
     res.status(404);
-    throw new Error('Application not found');
+    throw new Error("Application not found");
   }
 
   application.accepted = 1;
@@ -200,20 +206,22 @@ const reject = asyncHandler(async (req, res) => {
 
   if (!post) {
     res.status(404);
-    throw new Error('Post not found');
+    throw new Error("Post not found");
   }
 
   // Check if the user that made the post is the one rejecting the application
   if (post.user_id.toString() !== userId.toString()) {
     res.status(403);
-    throw new Error('You do not have permission to reject this application');
+    throw new Error("You do not have permission to reject this application");
   }
 
-  const application = post.applications.find(app => app.user_id.toString() === applicantId);
+  const application = post.applications.find(
+    (app) => app.user_id.toString() === applicantId
+  );
 
   if (!application) {
     res.status(404);
-    throw new Error('Application not found');
+    throw new Error("Application not found");
   }
 
   application.accepted = -1;
@@ -230,20 +238,22 @@ const deleteApplication = asyncHandler(async (req, res) => {
 
   if (!post) {
     res.status(404);
-    throw new Error('Post not found');
+    throw new Error("Post not found");
   }
 
-  const application = post.applications.find(app => app.user_id.toString() === userId.toString());
+  const application = post.applications.find(
+    (app) => app.user_id.toString() === userId.toString()
+  );
 
   if (!application) {
     res.status(404);
-    throw new Error('Application not found');
+    throw new Error("Application not found");
   }
 
   // Check if the user that made the application is the one deleting it
   if (application.user_id.toString() !== userId.toString()) {
     res.status(403);
-    throw new Error('You do not have permission to delete this application');
+    throw new Error("You do not have permission to delete this application");
   }
 
   // Remove the application from the applications array
@@ -252,7 +262,6 @@ const deleteApplication = asyncHandler(async (req, res) => {
 
   return res.json(updatedPost);
 });
-
 
 module.exports = {
   getPosts,
@@ -267,5 +276,5 @@ module.exports = {
   apply,
   accept,
   reject,
-  deleteApplication
+  deleteApplication,
 };

@@ -11,17 +11,37 @@ const Posts = () => {
   // Use state to keep track of public posts
   const [publicPostsData, setPublicPostsData] = useState([]);
 
+  //Use state to keep trach of hidden posts
+  const [hiddenPostsData, setHiddenPostsData] = useState([]);
+
+  //Use state to keep track of whether to display hiddenPosts or publicPosts
+  const [showHiddenPosts, setShowHiddenPosts] = useState(false);
+
+  //Use state to keep track of the current page for the sake of pagination
+  const [currentPage, setCurrentPage] = useState(1);
+  const goToNextPage = () => {
+    setCurrentPage((prevPage) => prevPage + 1);
+  };
+  const goToPreviousPage = () => {
+    setCurrentPage((prevPage) => prevPage - 1);
+  };
+  const maxPerPage = 5;
+
+  //API fetch to retrieve public posts data from mongoDB
   useEffect(() => {
     const fetchData = async () => {
       try {
         const accessToken = localStorage.getItem("accessToken");
-        const response = await fetch("http://localhost:4000/posts/myposts", {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-            "Content-Type": "application/json",
-          },
-        });
+        const response = await fetch(
+          `http://localhost:4000/posts/paging/public/?page=${currentPage}`,
+          {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
 
         if (response.ok) {
           const data = await response.json();
@@ -41,74 +61,45 @@ const Posts = () => {
     };
 
     fetchData();
-  }, []);
+  }, [currentPage]);
 
-  // Dummy Array containing hidden job posts (later feed data from API)
-  const hiddenPosts = [
-    {
-      id: 7,
-      title: "Hidden Post 1",
-      position: "Hidden Position 1",
-      importantSkills: "Hidden Skills 1",
-      description: "Hidden Description 1",
-    },
-    {
-      id: 8,
-      title: "Hidden Post 2",
-      position: "Hidden Position 2",
-      importantSkills: "Hidden Skills 2",
-      description: "Hidden Description 2",
-    },
-    {
-      id: 9,
-      title: "Hidden Post 3",
-      position: "Hidden Position 3",
-      importantSkills: "Hidden Skills 3",
-      description: "Hidden Description 3",
-    },
-    {
-      id: 10,
-      title: "Hidden Post 4",
-      position: "Hidden Position 4",
-      importantSkills: "Hidden Skills 4",
-      description: "Hidden Description 4",
-    },
-    {
-      id: 11,
-      title: "Hidden Post 5",
-      position: "Hidden Position 5",
-      importantSkills: "Hidden Skills 5",
-      description: "Hidden Description 5",
-    },
-    {
-      id: 12,
-      title: "Hidden Post 6",
-      position: "Hidden Position 6",
-      importantSkills: "Hidden Skills 6",
-      description: "Hidden Description 6",
-    },
-  ];
+  //API fetch to retrieve hidden posts data from mongoDB
+  useEffect(() => {
+    const fetchHiddenData = async () => {
+      try {
+        const accessToken = localStorage.getItem("accessToken");
+        const response = await fetch(
+          `http://localhost:4000/posts/paging/hidden/?page=${currentPage}`,
+          {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
 
-  //State to determine whether to show you public posts or your hidden ones
-  const [showHiddenPosts, setShowHiddenPosts] = useState(false);
+        if (response.ok) {
+          const data = await response.json();
+          setHiddenPostsData(data);
+        } else {
+          console.error(
+            "Failed to fetch hidden data:",
+            response.status,
+            response.statusText
+          );
+        }
+      } catch (error) {
+        console.error("Error during hidden fetch:", error);
+      }
+    };
 
-  //State for pagination
-  const [currentPage, setCurrentPage] = useState(1);
-  const maxPerPage = 5;
-  const indexOfLastPost = currentPage * maxPerPage;
-  const indexOfFirstPost = indexOfLastPost - maxPerPage;
+    fetchHiddenData();
+  }, [currentPage]);
 
   //Depending on state, select the corresponding list of posts
-  const postsToShow = showHiddenPosts ? hiddenPosts : publicPostsData;
-  const displayedPosts = postsToShow.slice(indexOfFirstPost, indexOfLastPost);
-
-  const goToNextPage = () => {
-    setCurrentPage((prevPage) => prevPage + 1);
-  };
-
-  const goToPreviousPage = () => {
-    setCurrentPage((prevPage) => prevPage - 1);
-  };
+  const postsToShow = showHiddenPosts ? hiddenPostsData : publicPostsData;
+  const displayedPosts = postsToShow;
 
   return (
     <div>
@@ -140,13 +131,7 @@ const Posts = () => {
         <div className="posts-container">
           {showHiddenPosts
             ? displayedPosts.map((post) => (
-                <HiddenPost
-                  key={post._id}
-                  title={post.title}
-                  position={post.position}
-                  importantSkills={post.importantSkills}
-                  description={post.description}
-                />
+                <HiddenPost key={post._id} post={post} />
               ))
             : displayedPosts.map((post) => {
                 console.log(post);
@@ -162,7 +147,7 @@ const Posts = () => {
           <div>{`Page ${currentPage}`}</div>
           <button
             onClick={goToNextPage}
-            disabled={indexOfLastPost >= postsToShow.length}
+            disabled={displayedPosts.length < maxPerPage}
           >
             &gt;
           </button>

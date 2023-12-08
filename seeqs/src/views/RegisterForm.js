@@ -4,14 +4,14 @@ import { useNavigate } from "react-router-dom";
 
 const RegisterForm = () => {
   const navigate = useNavigate();
-  //Use states for fName, lName, email, phoneNumber, Password
+  //Use states for fName, lName, email, phone, Password
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
+  const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
 
-  //Set states for fName, lName, email, phoneNumber, Password
+  //Set states for fName, lName, email, phone, Password
   const handleFirstNameChange = (event) => {
     setFirstName(event.target.value);
   };
@@ -21,9 +21,9 @@ const RegisterForm = () => {
   const handleEmailChange = (event) => {
     setEmail(event.target.value);
   };
-  const handlePhoneNumberChange = (event) => {
+  const handlePhoneChange = (event) => {
     const numericValue = event.target.value.replace(/\D/g, "");
-    setPhoneNumber(numericValue);
+    setPhone(numericValue);
   };
   const handlePasswordChange = (event) => {
     setPassword(event.target.value);
@@ -45,9 +45,9 @@ const RegisterForm = () => {
 
     return "valid";
   };
-  const validatePhoneNumber = (phoneNumber) => {
-    // Check if the phoneNumber is a non-empty string of numeric characters
-    return /^[0-9]+$/.test(phoneNumber);
+  const validatePhone = (phone) => {
+    // Check if the phone is a non-empty string of numeric characters
+    return /^[0-9]+$/.test(phone);
   };
 
   //Register form verification
@@ -59,7 +59,7 @@ const RegisterForm = () => {
       firstName.trim() === "" ||
       lastName.trim() === "" ||
       email.trim() === "" ||
-      phoneNumber.trim() === "" ||
+      phone.trim() === "" ||
       password.trim() === ""
     ) {
       alert("Please fill in all fields");
@@ -80,14 +80,14 @@ const RegisterForm = () => {
     }
 
     //Validate phone number format
-    if (!validatePhoneNumber(phoneNumber)) {
+    if (!validatePhone(phone)) {
       alert("Please enter a valid phone number");
       return;
     }
 
     //Send registration logic to API
     const registrationEndpoint = "http://localhost:4000/auth/register/";
-    const userData = { firstName, lastName, email, phoneNumber, password };
+    const userData = { firstName, lastName, email, phone, password };
 
     fetch(registrationEndpoint, {
       method: "POST",
@@ -157,8 +157,8 @@ const RegisterForm = () => {
             Phone Number
             <input
               type="text"
-              value={phoneNumber}
-              onChange={handlePhoneNumberChange}
+              value={phone}
+              onChange={handlePhoneChange}
               className="register-form-input"
             />
           </label>
