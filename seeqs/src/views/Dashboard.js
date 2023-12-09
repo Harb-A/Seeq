@@ -9,6 +9,8 @@ const Dashboard = () => {
   //If the authentication token is present, allow the user to access the dashboard
   //If the authenticaion token is not present, send the user back to the login page.
   const navigate = useNavigate();
+
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
     const accessToken = localStorage.getItem("accessToken");
     if (!accessToken) {
@@ -29,6 +31,7 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        setLoading(true);
         const accessToken = localStorage.getItem("accessToken");
         const response = await fetch(
           `http://localhost:4000/posts/paging/?page=${currentPage}`,
@@ -50,6 +53,8 @@ const Dashboard = () => {
         setAllPostsData(data);
       } catch (error) {
         console.error("Error fetching data:", error);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -178,7 +183,10 @@ const Dashboard = () => {
           Recommended Posts
         </button>
       </div>
-
+      {/* If busy fetching from API show loading */}
+      {loading && <div>Loading...</div>}
+      {/* Show "Nothing found" message if there are no posts */}
+      {!loading && displayedJobPosts.length === 0 && <div>Nothing found</div>}
       {/* Map data from predefined arrays to job card component and render them */}
       <div className="job-cards-container">
         {displayedJobPosts.map((post) => (

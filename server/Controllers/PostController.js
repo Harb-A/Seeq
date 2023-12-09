@@ -102,6 +102,7 @@ const paginatedPublicPosts = asyncHandler(async (req, res) => {
 
 const paginatedHiddenPosts = asyncHandler(async (req, res) => {
   console.log(req.query.page);
+  const userId = req.user.id;
   const page = parseInt(req.query.page);
   const limit = 5; // Set the limit to 5
 
@@ -267,19 +268,21 @@ const deleteApplication = asyncHandler(async (req, res) => {
 });
 
 const getMyApplications = asyncHandler(async (req, res) => {
-  const userId = req.user.id; 
+  const userId = req.user.id;
 
   // Find all posts
   const posts = await Post.find({});
 
   if (!posts) {
     res.status(404);
-    throw new Error('Posts not found');
+    throw new Error("Posts not found");
   }
 
   // Filter out other users' applications
-  const userPosts = posts.map(post => {
-    const userApplications = post.applications.filter(app => app.user_id.toString() === userId.toString());
+  const userPosts = posts.map((post) => {
+    const userApplications = post.applications.filter(
+      (app) => app.user_id.toString() === userId.toString()
+    );
     return { ...post._doc, applications: userApplications };
   });
 
@@ -294,27 +297,39 @@ const postsWithApps = asyncHandler(async (req, res) => {
 
   if (!posts) {
     res.status(404);
-    throw new Error('Posts not found');
+    throw new Error("Posts not found");
   }
 
   // Filter out posts without applications
-  const postsWithApplications = posts.filter(post => post.applications.length > 0);
+  const postsWithApplications = posts.filter(
+    (post) => post.applications.length > 0
+  );
 
   // Populate user details in applications
-  const populatedPosts = await Promise.all(postsWithApplications.map(async post => {
-    post = post.toObject();
-    post.applications = await Promise.all(post.applications.map(async app => {
-      const user = await User.findById(app.user_id).select('firstName lastName email phone resume');
-      return { ...app, firstName: user.firstName, lastName: user.lastName, email: user.email, phone: user.phone, resume: user.resume };
-    }));
-    return post;
-  }));
+  const populatedPosts = await Promise.all(
+    postsWithApplications.map(async (post) => {
+      post = post.toObject();
+      post.applications = await Promise.all(
+        post.applications.map(async (app) => {
+          const user = await User.findById(app.user_id).select(
+            "firstName lastName email phone resume"
+          );
+          return {
+            ...app,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            email: user.email,
+            phone: user.phone,
+            resume: user.resume,
+          };
+        })
+      );
+      return post;
+    })
+  );
 
   return res.json(populatedPosts);
 });
-
-
-
 
 module.exports = {
   getPosts,

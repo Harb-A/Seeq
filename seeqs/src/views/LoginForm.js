@@ -3,13 +3,15 @@ import "../styles/LoginForm.css";
 import { useNavigate } from "react-router-dom";
 
 const LoginForm = () => {
-  //Use states for the email and password
+  //Use states for the email and password and loading
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
 
   //Set states for email and password
   const handleEmailChange = (event) => {
-    setEmail(event.target.value);
+    const lowercaseEmail = event.target.value.toLowerCase();
+    setEmail(lowercaseEmail);
   };
   const handlePasswordChange = (event) => {
     setPassword(event.target.value);
@@ -37,14 +39,24 @@ const LoginForm = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
+    //Set loading to true while i am verifying
+    setLoading(true);
+
     //Validate email and password
     if (!validateEmail(email)) {
       alert("Please enter a valid email address");
+      setLoading(false);
       return;
     }
     const passwordValidationResult = validatePassword(password);
     if (passwordValidationResult !== "valid") {
       alert(passwordValidationResult);
+      setLoading(false);
+      return;
+    }
+    if (!email || !password) {
+      alert("Please enter both email and password");
+      setLoading(false);
       return;
     }
 
@@ -64,6 +76,8 @@ const LoginForm = () => {
 
       if (!response.ok) {
         alert("Invalid credentials, Please try again.");
+        setLoading(false);
+        return;
       }
 
       const data = await response.json();
@@ -75,6 +89,8 @@ const LoginForm = () => {
     } catch (error) {
       console.log(error);
       alert("An error occurred. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -114,8 +130,8 @@ const LoginForm = () => {
         </div>
 
         <br />
-        <button type="submit" className="login-form-button">
-          Login
+        <button type="submit" className="login-form-button" disabled={loading}>
+          {loading ? "Logging in..." : "Login"}
         </button>
       </form>
       <p className="login-form-text">

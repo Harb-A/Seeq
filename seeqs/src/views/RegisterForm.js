@@ -4,12 +4,13 @@ import { useNavigate } from "react-router-dom";
 
 const RegisterForm = () => {
   const navigate = useNavigate();
-  //Use states for fName, lName, email, phone, Password
+  //Use states for fName, lName, email, phone, Password and loading
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
 
   //Set states for fName, lName, email, phone, Password
   const handleFirstNameChange = (event) => {
@@ -66,9 +67,12 @@ const RegisterForm = () => {
       return;
     }
 
+    setLoading(true);
+
     //Validate the email
     if (!validateEmail(email)) {
       alert("Please enter a valid email address");
+      setLoading(false);
       return;
     }
 
@@ -76,18 +80,26 @@ const RegisterForm = () => {
     const passwordValidationResult = validatePassword(password);
     if (passwordValidationResult !== "valid") {
       alert(passwordValidationResult);
+      setLoading(false);
       return;
     }
 
     //Validate phone number format
     if (!validatePhone(phone)) {
       alert("Please enter a valid phone number");
+      setLoading(false);
       return;
     }
 
     //Send registration logic to API
     const registrationEndpoint = "http://localhost:4000/auth/register/";
-    const userData = { firstName, lastName, email, phone, password };
+    const userData = {
+      firstName,
+      lastName,
+      email: email.toLowerCase(),
+      phone,
+      password,
+    };
 
     fetch(registrationEndpoint, {
       method: "POST",
@@ -106,6 +118,9 @@ const RegisterForm = () => {
       })
       .catch((error) => {
         console.error("Error during registration:", error);
+      })
+      .finally(() => {
+        setLoading(false);
       });
   };
 
@@ -178,8 +193,12 @@ const RegisterForm = () => {
         </div>
 
         <br />
-        <button type="submit" className="register-form-button">
-          Register
+        <button
+          type="submit"
+          className="register-form-button"
+          disabled={loading}
+        >
+          {loading ? "Registering..." : "Register"}
         </button>
       </form>
     </div>

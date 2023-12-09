@@ -1,36 +1,43 @@
 .profile-container {
-  margin: 0;
   display: flex;
-  min-height: 100vh;
-  align-items: center;
   justify-content: center;
+  align-items: center;
+  height: 100vh;
 }
+
 .profile {
   width: 50%;
-  height: 70vh;
-  margin: 0 auto;
+  height: 75%;
   background-color: #fff;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
   padding: 16px;
-  margin-bottom: 16px;
-  box-sizing: border-box;
   margin-top: 16px;
+  box-sizing: border-box;
 }
 
-.profile-username {
+.profile-title {
   font-size: 2rem;
   color: #555;
-  margin: 10px;
-}
-.profile-email,
-.profile-phonenumber {
-  font-size: 1.2rem;
-  color: #555;
-  margin: 10px;
+  margin-bottom: 16px;
 }
 
-.edit-profile-button {
+.profile label {
+  display: block;
+  font-size: 1.2rem;
+  color: #555;
+  margin-top: 10px;
+}
+
+.profile input {
+  width: 100%;
+  padding: 8px;
+  margin-top: 5px;
+  margin-bottom: 15px;
+  box-sizing: border-box;
+}
+
+.save-changes-button {
   background-color: #1c3263;
   color: #fff;
   font-size: 1em;
@@ -38,9 +45,14 @@
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  margin: 10px;
 }
 
-.edit-profile-button:hover {
+.save-changes-button:hover {
   text-decoration: underline;
+}
+.update-profile-container {
+  display: flex;
+  flex-direction: row-reverse;
+  align-content: space-between;
+  justify-content: space-between;
 }

@@ -17,6 +17,10 @@ const Posts = () => {
   //Use state to keep track of whether to display hiddenPosts or publicPosts
   const [showHiddenPosts, setShowHiddenPosts] = useState(false);
 
+  //Use state for loading messages
+  const [loadingPublicPosts, setLoadingPublicPosts] = useState(true);
+  const [loadingHiddenPosts, setLoadingHiddenPosts] = useState(true);
+
   //Use state to keep track of the current page for the sake of pagination
   const [currentPage, setCurrentPage] = useState(1);
   const goToNextPage = () => {
@@ -31,6 +35,8 @@ const Posts = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        setLoadingPublicPosts(true);
+
         const accessToken = localStorage.getItem("accessToken");
         const response = await fetch(
           `http://localhost:4000/posts/paging/public/?page=${currentPage}`,
@@ -47,7 +53,6 @@ const Posts = () => {
           const data = await response.json();
           // Assuming the API returns an array of job posts and hidden posts
           setPublicPostsData(data);
-          console.log(data);
         } else {
           console.error(
             "Failed to fetch data:",
@@ -57,6 +62,8 @@ const Posts = () => {
         }
       } catch (error) {
         console.error("Error during fetch:", error);
+      } finally {
+        setLoadingPublicPosts(false);
       }
     };
 
@@ -67,6 +74,7 @@ const Posts = () => {
   useEffect(() => {
     const fetchHiddenData = async () => {
       try {
+        setLoadingHiddenPosts(true);
         const accessToken = localStorage.getItem("accessToken");
         const response = await fetch(
           `http://localhost:4000/posts/paging/hidden/?page=${currentPage}`,
@@ -82,6 +90,7 @@ const Posts = () => {
         if (response.ok) {
           const data = await response.json();
           setHiddenPostsData(data);
+          console.log(data, "hidden data");
         } else {
           console.error(
             "Failed to fetch hidden data:",
@@ -91,6 +100,8 @@ const Posts = () => {
         }
       } catch (error) {
         console.error("Error during hidden fetch:", error);
+      } finally {
+        setLoadingHiddenPosts(false);
       }
     };
 
@@ -126,6 +137,18 @@ const Posts = () => {
             Hidden Posts
           </button>
         </div>
+
+        {/* Display "Loading..." message while data is being fetched */}
+        {loadingPublicPosts || loadingHiddenPosts ? (
+          <div>Loading...</div>
+        ) : null}
+
+        {/* Display "Nothing found" message if there are no posts */}
+        {!loadingPublicPosts &&
+        !loadingHiddenPosts &&
+        displayedPosts.length === 0 ? (
+          <div>Nothing found.</div>
+        ) : null}
 
         {/* Public or hidden posts based on state*/}
         <div className="posts-container">

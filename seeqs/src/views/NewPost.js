@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import Taskbar from "../components/Taskbar";
 import "../styles/NewPost.css";
+import { useNavigate } from "react-router-dom";
 
 const NewPost = () => {
+  const navigate = useNavigate();
   const [title, setTitle] = useState("");
   const [position, setPosition] = useState("");
   const [skills, setSkills] = useState("");
@@ -61,6 +63,7 @@ const NewPost = () => {
 
       // Provide additional feedback to the user, e.g., display a success message
       alert("Post created successfully!");
+      navigate("/posts");
     } catch (error) {
       console.error("Error creating post:", error);
       // Provide feedback to the user about the error, e.g., display an error message

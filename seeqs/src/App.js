@@ -9,7 +9,6 @@ import Posts from "./views/Posts.js";
 import Applications from "./views/Applications.js";
 import NewPost from "./views/NewPost.js";
 import DetailPage from "./views/DetailPage.js";
-import EditProfile from "./views/EditProfile.js";
 
 function App() {
   return (
@@ -24,7 +23,7 @@ function App() {
           <Route path="/applications" element={<Applications />} />
           <Route path="/new-post" element={<NewPost />} />
           <Route path="/profile" element={<Profile />} />
-          <Route path="/edit-profile" element={<EditProfile />} />
+
           <Route path="/*" element={<NotFound />} />
         </Routes>
       </Router>
