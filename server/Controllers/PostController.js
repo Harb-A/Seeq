@@ -3,8 +3,8 @@ const mongoose = require("mongoose");
 const asyncHandler = require("express-async-handler");
 const Post = require("../Models/PostModel");
 const User = require("../Models/UserModel");
-const multer = require('multer');
-const upload = multer();
+const multer = require("multer");
+const upload = multer({ dest: "uploads/" });
 // const { post } = require("../Routes/AuthRoutes");
 require("dotenv").config();
 
@@ -137,16 +137,17 @@ const hiding = asyncHandler(async (req, res) => {
 });
 
 const apply = asyncHandler(async (req, res) => {
-  upload.single('resume')(req, res, async (err) => {
-    if (err) {
-      return res.status(400).json({ error: err.message });
-    }
-
+  //console logs
+  const coverLLL = req.body.coverLetter;
+  console.log("Request body1:", req.body.coverLetter);
+  console.log("Request file1:", req.body.resume);
+  upload.single("resume")(req, res, async (err) => {
     const postId = req.params.pId;
     const userId = req.user.id;
 
-    console.log("Content-Type:", req.headers["content-type"]);
-    console.log(req.body.cover_letter);
+    //console logs
+    console.log("Request body2:", req.body.coverLetter);
+    console.log("Request file2:", req.body.resume);
 
     const post = await Post.findById(postId);
 
@@ -167,12 +168,12 @@ const apply = asyncHandler(async (req, res) => {
 
     const newApplication = {
       user_id: userId,
-      cover_letter: req.body.cover_letter,
+      cover_letter: coverLLL,
       accepted: 0,
       resume: {
         data: req.file.buffer,
-        contentType: req.file.mimetype
-      }
+        contentType: req.file.mimetype,
+      },
     };
 
     post.applications.push(newApplication);
@@ -180,6 +181,8 @@ const apply = asyncHandler(async (req, res) => {
 
     return res.json(updatedPost);
   });
+  console.log("Request body3:", req.body.coverLetter);
+  console.log("Request file3:", req.body.resume);
 });
 
 //this function takes the post id and the applicant id and accepts the applicant, also it checks if the user that made the post is the one accepting the application

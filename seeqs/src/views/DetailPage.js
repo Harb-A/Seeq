@@ -50,18 +50,23 @@ const DetailPage = () => {
     try {
       const authToken = localStorage.getItem("accessToken");
 
-      const formData = new FormData();
-      formData.append("cover_letter", coverLetter);
-      formData.append("resume", attachedFile);
+      if (!attachedFile) {
+        console.error("No file attached. Please attach a file.");
+        return;
+      }
 
-      console.log(formData);
+      const fd = new FormData();
+      fd.append("coverLetter", coverLetter);
+      fd.append("resume", attachedFile);
+
+      console.log(fd);
 
       const response = await fetch(`http://localhost:4000/posts/${id}/apply`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${authToken}`,
         },
-        body: formData,
+        body: fd,
       });
 
       if (!response.ok) {
@@ -101,6 +106,7 @@ const DetailPage = () => {
           <label htmlFor="coverLetter">Cover Letter</label>
           <textarea
             id="coverLetter"
+            name="coverLetter"
             className="cl-textarea"
             value={coverLetter}
             onChange={handleCoverLetterChange}
