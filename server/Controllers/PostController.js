@@ -3,6 +3,8 @@ const mongoose = require("mongoose");
 const asyncHandler = require("express-async-handler");
 const Post = require("../Models/PostModel");
 const User = require("../Models/UserModel");
+const multer = require('multer');
+const upload = multer();
 // const { post } = require("../Routes/AuthRoutes");
 require("dotenv").config();
 
@@ -135,39 +137,49 @@ const hiding = asyncHandler(async (req, res) => {
 });
 
 const apply = asyncHandler(async (req, res) => {
-  const postId = req.params.pId;
-  const userId = req.user.id;
-  console.log(req.body);
-  const post = await Post.findById(postId);
+  upload.single('resume')(req, res, async (err) => {
+    if (err) {
+      return res.status(400).json({ error: err.message });
+    }
 
-  console.log("Content-Type:", req.headers["content-type"]);
-  console.log(req.body.cover_letter);
+    const postId = req.params.pId;
+    const userId = req.user.id;
 
-  if (!post) {
-    res.status(404);
-    throw new Error("Post not found");
-  }
+    console.log("Content-Type:", req.headers["content-type"]);
+    console.log(req.body.cover_letter);
 
-  const existingApplication = post.applications.find(
-    (app) => app.user_id.toString() === userId.toString()
-  );
+    const post = await Post.findById(postId);
 
-  if (existingApplication) {
-    return res
-      .status(400)
-      .json({ message: "You have already applied to this post" });
-  }
+    if (!post) {
+      res.status(404);
+      throw new Error("Post not found");
+    }
 
-  const newApplication = {
-    user_id: userId,
-    cover_letter: req.body.cover_letter,
-    accepted: 0,
-  };
+    const existingApplication = post.applications.find(
+      (app) => app.user_id.toString() === userId.toString()
+    );
 
-  post.applications.push(newApplication);
-  const updatedPost = await post.save();
+    if (existingApplication) {
+      return res
+        .status(400)
+        .json({ message: "You have already applied to this post" });
+    }
 
-  return res.json(updatedPost);
+    const newApplication = {
+      user_id: userId,
+      cover_letter: req.body.cover_letter,
+      accepted: 0,
+      resume: {
+        data: req.file.buffer,
+        contentType: req.file.mimetype
+      }
+    };
+
+    post.applications.push(newApplication);
+    const updatedPost = await post.save();
+
+    return res.json(updatedPost);
+  });
 });
 
 //this function takes the post id and the applicant id and accepts the applicant, also it checks if the user that made the post is the one accepting the application
