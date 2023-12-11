@@ -4,31 +4,58 @@ const asyncHandler = require("express-async-handler");
 const Resume = require("../Models/ResumeModel");
 const User = require("../Models/UserModel");
 
-const multer = require('multer');
+const multer = require("multer");
 const upload = multer({ storage: multer.memoryStorage() });
 
-
-const addResume = async (req, res) => {
+const doResume = asyncHandler(async (req, res) => {
   if (!req.file) {
-    res.status(400).send('No resume uploaded.');
+    res.status(400).send("No resume uploaded.");
     return;
   }
 
-  const newResume = new Resume({
-    userId: req.user.id, // Assuming `req.user` contains the authenticated user
-    tags: [], // Add any tags here
+  const resumeData = {
+    userId: req.user.id,
     resume: {
       data: req.file.buffer,
-      contentType: req.file.mimetype
-    }
+      contentType: req.file.mimetype,
+    },
+    Name: req.body.Name,
+    education: req.body.education,
+    email: req.body.email,
+    interests: req.body.interests,
+    overview: req.body.overview,
+    phone: req.body.phone,
+    projects: req.body.projects,
+    skills: req.body.skills,
+  };
+
+  const resume = await Resume.findOneAndUpdate({ userId: req.user.id }, resumeData, {
+    upsert: true,
+    new: true,
+    setDefaultsOnInsert: true,
   });
 
-  try {
-    await newResume.save();
-    res.status(201).send('Resume uploaded successfully.');
-  } catch (error) {
-    res.status(500).send('Error uploading resume: ' + error.message);
+  if (resume) {
+    res.status(201).send("Resume uploaded successfully.");
+  } else {
+    throw new Error("Error uploading resume");
   }
-};
+});
 
-module.exports = { addResume };
+const getResume = asyncHandler(async (req, res) => {
+  const resume = await Resume.findOne({ userId: req.user.id });
+
+  if (resume) {
+    // Set the appropriate headers
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', 'attachment; filename=resume.pdf');
+
+    // Send the resume data as a binary response
+    res.send(resume.resume.data);
+  } else {
+    res.status(404);
+    throw new Error('Resume not found');
+  }
+});
+
+module.exports = { doResume, getResume };
