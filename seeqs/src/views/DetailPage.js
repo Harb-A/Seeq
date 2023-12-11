@@ -52,7 +52,7 @@ const DetailPage = () => {
 
       const formData = new FormData();
       formData.append("cover_letter", coverLetter);
-      //formData.append("resume", attachedFile);
+      formData.append("resume", attachedFile);
 
       console.log(formData);
 
@@ -60,9 +60,8 @@ const DetailPage = () => {
         method: "POST",
         headers: {
           Authorization: `Bearer ${authToken}`,
-          "Content-Type": "application/json",
         },
-        body: JSON.stringify({ cover_letter: "example", resume: null }),
+        body: formData,
       });
 
       if (!response.ok) {
