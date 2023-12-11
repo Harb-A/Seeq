@@ -8,7 +8,7 @@ const Resume = () => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
-    phoneNumber: "",
+    phone: "",
     interests: "",
     overview: "",
     education: "",
@@ -94,7 +94,7 @@ const Resume = () => {
       const fd = new FormData();
       fd.append("name", formData.name);
       fd.append("email", formData.email);
-      fd.append("phoneNumber", formData.phoneNumber);
+      fd.append("phone", formData.phone);
       fd.append("interests", formData.interests);
       fd.append("overview", formData.overview);
       fd.append("education", formData.education);
@@ -143,7 +143,7 @@ const Resume = () => {
     pdf.setFontSize(12);
     pdf.text(`${formData.name}`, 20, 40);
     pdf.text(`Email: ${formData.email}`, 20, 50);
-    pdf.text(`Phone: ${formData.phoneNumber}`, 20, 60);
+    pdf.text(`Phone: ${formData.phone}`, 20, 60);
 
     let currentY = 80; // Set initial Y-coordinate for the first category
 
@@ -191,7 +191,7 @@ const Resume = () => {
     pdf.setFontSize(12);
     pdf.text(`${formData.name}`, 20, 40);
     pdf.text(`Email: ${formData.email}`, 20, 50);
-    pdf.text(`Phone: ${formData.phoneNumber}`, 20, 60);
+    pdf.text(`Phone: ${formData.phone}`, 20, 60);
 
     let currentY = 80; // Set initial Y-coordinate for the first category
 
@@ -283,13 +283,13 @@ const Resume = () => {
               {editable ? (
                 <input
                   type="tel"
-                  name="phoneNumber"
-                  value={formData.phoneNumber}
+                  name="phone"
+                  value={formData.phone}
                   onChange={handleChange}
                   className="resume-input"
                 />
               ) : (
-                <div className="resume-display">{formData.phoneNumber}</div>
+                <div className="resume-display">{formData.phone}</div>
               )}
             </label>
             <br />

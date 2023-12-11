@@ -19,7 +19,7 @@ const doResume = asyncHandler(async (req, res) => {
       data: req.file.buffer,
       contentType: req.file.mimetype,
     },
-    Name: req.body.Name,
+    name: req.body.Name,
     education: req.body.education,
     email: req.body.email,
     interests: req.body.interests,
@@ -29,11 +29,15 @@ const doResume = asyncHandler(async (req, res) => {
     skills: req.body.skills,
   };
 
-  const resume = await Resume.findOneAndUpdate({ userId: req.user.id }, resumeData, {
-    upsert: true,
-    new: true,
-    setDefaultsOnInsert: true,
-  });
+  const resume = await Resume.findOneAndUpdate(
+    { userId: req.user.id },
+    resumeData,
+    {
+      upsert: true,
+      new: true,
+      setDefaultsOnInsert: true,
+    }
+  );
 
   if (resume) {
     res.status(201).send("Resume uploaded successfully.");
@@ -43,13 +47,15 @@ const doResume = asyncHandler(async (req, res) => {
 });
 
 const getResume = asyncHandler(async (req, res) => {
-  const resume = await Resume.findOne({ userId: req.user.id }).select('-resume');
+  const resume = await Resume.findOne({ userId: req.user.id }).select(
+    "-resume"
+  );
 
   if (resume) {
     res.json(resume);
   } else {
     res.status(404);
-    throw new Error('Resume not found');
+    throw new Error("Resume not found");
   }
 });
 
