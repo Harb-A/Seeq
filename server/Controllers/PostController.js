@@ -8,9 +8,9 @@ require("dotenv").config();
 
 // route link (http://localhost:4000/posts/)
 const getPosts = asyncHandler(async (req, res) => {
-  const post = await Post.find({});
-  console.log(post.skills);
-  res.json(post);
+  const userId = req.user.id;
+  const posts = await Post.find({ user_id: { $ne: userId } });
+  res.json(posts);
 });
 // route link (http://localhost:4000/posts/myposts)
 const getMyPosts = asyncHandler(async (req, res) => {
@@ -137,7 +137,7 @@ const hiding = asyncHandler(async (req, res) => {
 const apply = asyncHandler(async (req, res) => {
   const postId = req.params.pId;
   const userId = req.user.id;
-
+  console.log(req.body);
   const post = await Post.findById(postId);
 
   if (!post) {
@@ -157,7 +157,7 @@ const apply = asyncHandler(async (req, res) => {
 
   const newApplication = {
     user_id: userId,
-    cover_letter: req.body.cover_letter, // Assuming the cover letter is sent in the request body
+    cover_letter: req.body.cover_letter,
     accepted: 0,
   };
 
