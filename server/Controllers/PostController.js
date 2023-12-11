@@ -286,7 +286,18 @@ const getMyApplications = asyncHandler(async (req, res) => {
     return { ...post._doc, applications: userApplications };
   });
 
-  return res.json(userPosts);
+  // Filter out posts that don't have any applications from the user
+  const postsWithUserApplications = userPosts.filter(
+    (post) => post.applications.length > 0
+  );
+
+  // If there are no posts with user applications, send a 404 status code and an error message
+  if (postsWithUserApplications.length === 0) {
+    res.status(404);
+    throw new Error('No applications found');
+  }
+
+  return res.json(postsWithUserApplications);
 });
 
 const postsWithApps = asyncHandler(async (req, res) => {
