@@ -16,6 +16,9 @@ const Taskbar = () => {
         <Link to="/applications" className="taskbar-navigation-button">
           Applications
         </Link>
+        <Link to="/resume" className="taskbar-navigation-button">
+          Resume
+        </Link>
         <Link to="/profile" className="taskbar-navigation-button">
           Profile
         </Link>

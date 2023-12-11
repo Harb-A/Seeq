@@ -184,9 +184,11 @@ const Dashboard = () => {
         </button>
       </div>
       {/* If busy fetching from API show loading */}
-      {loading && <div>Loading...</div>}
+      {loading && <div className="api-status-container">Loading...</div>}
       {/* Show "Nothing found" message if there are no posts */}
-      {!loading && displayedJobPosts.length === 0 && <div>Nothing found</div>}
+      {!loading && displayedJobPosts.length === 0 && (
+        <div className="api-status-container">Nothing found</div>
+      )}
       {/* Map data from predefined arrays to job card component and render them */}
       <div className="job-cards-container">
         {displayedJobPosts.map((post) => (

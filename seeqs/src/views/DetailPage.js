@@ -6,7 +6,7 @@ import "../styles/DetailPage.css";
 const DetailPage = () => {
   const { id } = useParams();
   const [itemData, setItemData] = useState();
-  const [showApplyForm, setShowApplyForm] = useState(false);
+
   const [coverLetter, setCoverLetter] = useState("");
   const [attachedFile, setAttachedFile] = useState(null);
 
@@ -37,10 +37,6 @@ const DetailPage = () => {
     return <p>Loading...</p>;
   }
 
-  const handleApplyClick = () => {
-    setShowApplyForm(true);
-  };
-
   const handleCoverLetterChange = (e) => {
     setCoverLetter(e.target.value);
   };
@@ -69,44 +65,37 @@ const DetailPage = () => {
             Skills: <br />
             {itemData[0].skills.join(", ")}
           </p>
-          <div className="post-details-footer">
-            {!showApplyForm && (
-              <button className="apply-button" onClick={handleApplyClick}>
-                Apply
-              </button>
-            )}
+          <div className="post-details-footer"></div>
+        </div>
 
-            {showApplyForm && (
-              <div className="apply-form">
-                <label htmlFor="coverLetter">Cover Letter:</label>
-                <textarea
-                  id="coverLetter"
-                  value={coverLetter}
-                  onChange={handleCoverLetterChange}
-                />
+        <div className="apply-form">
+          <label htmlFor="coverLetter">Cover Letter</label>
+          <textarea
+            id="coverLetter"
+            className="cl-textarea"
+            value={coverLetter}
+            onChange={handleCoverLetterChange}
+          />
 
-                <label htmlFor="file">Attach PDF:</label>
-                <input
-                  type="file"
-                  id="file"
-                  accept=".pdf"
-                  onChange={handleFileChange}
-                />
+          <label htmlFor="file" className="walak">
+            Attach PDF
+          </label>
+          <input
+            type="file"
+            id="file"
+            accept=".pdf"
+            onChange={handleFileChange}
+          />
 
-                <button
-                  className="submit-button"
-                  onClick={() => {
-                    // Handle form submission
-                    // You can send the coverLetter and attachedFile to your backend here
-                    console.log("Cover Letter:", coverLetter);
-                    console.log("Attached File:", attachedFile);
-                  }}
-                >
-                  Submit Application
-                </button>
-              </div>
-            )}
-          </div>
+          <button
+            className="submit-button"
+            onClick={() => {
+              console.log("Cover Letter:", coverLetter);
+              console.log("Attached File:", attachedFile);
+            }}
+          >
+            Submit Application
+          </button>
         </div>
       </div>
     </div>

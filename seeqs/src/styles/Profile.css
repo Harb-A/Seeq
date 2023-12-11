@@ -7,7 +7,7 @@
 
 .profile {
   width: 50%;
-  height: 75%;
+
   background-color: #fff;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
@@ -45,6 +45,7 @@
   border: none;
   border-radius: 4px;
   cursor: pointer;
+  margin: 5px;
 }
 
 .save-changes-button:hover {
@@ -53,6 +54,4 @@
 .update-profile-container {
   display: flex;
   flex-direction: row-reverse;
-  align-content: space-between;
-  justify-content: space-between;
 }

@@ -65,3 +65,10 @@
   background-color: #aaa;
   cursor: not-allowed;
 }
+
+.api-status-container {
+  width: 50%;
+  margin: auto;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
