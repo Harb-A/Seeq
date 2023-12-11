@@ -1,0 +1,35 @@
+.application-job-card {
+  width: 50%;
+  margin: auto;
+  background-color: #1c3263; /* Inverted to blue tone */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+  box-sizing: border-box;
+  transition: all 0.3s ease;
+}
+
+.application-job-card-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.application-job-card-header h3 {
+  color: #fff; /* Text color updated to white */
+}
+
+.application-job-card p {
+  color: #ccc; /* Text color updated to a light gray */
+}
+
+.application-job-important-skills {
+  color: #fff; /* Text color updated to white */
+}
+
+.application-job-body {
+  font-size: 1rem;
+  color: #eee; /* Text color updated to a lighter gray */
+  text-align: left;
+}

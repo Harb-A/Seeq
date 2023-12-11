@@ -117,137 +117,142 @@ const Resume = () => {
     <div>
       <Taskbar />
       <div className="resume-container">
-        <h1 className="resume-heading">Resume</h1>
-        {editable ? (
-          <button onClick={handleSaveClick} className="resume-save-btn">
-            Save your resume
-          </button>
-        ) : (
-          <>
-            {" "}
-            <button onClick={handleEditClick} className="resume-edit-btn">
-              Edit your resume
-            </button>
-            <button onClick={handleDownloadPDF} className="resume-download-btn">
-              Download as PDF
-            </button>
-          </>
-        )}
-        <form className="resume-form">
-          <label>
-            Name:
+        <div className="resume">
+          {" "}
+          <div className="resume-header">
+            <h1 className="resume-heading">Resume</h1>
             {editable ? (
-              <input
-                type="text"
-                name="name"
-                value={formData.name}
-                onChange={handleChange}
-                className="resume-input"
-              />
+              <button onClick={handleSaveClick} className="resume-edit-btn">
+                Save your resume
+              </button>
             ) : (
-              <div className="resume-display">{formData.name}</div>
+              <>
+                {" "}
+                <button onClick={handleEditClick} className="resume-edit-btn">
+                  Edit
+                </button>
+                <button onClick={handleDownloadPDF} className="resume-edit-btn">
+                  Download
+                </button>
+              </>
             )}
-          </label>
-          <br />
-          <label>
-            Email:
-            {editable ? (
-              <input
-                type="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                className="resume-input"
-              />
-            ) : (
-              <div className="resume-display">{formData.email}</div>
-            )}
-          </label>
-          <br />
-          <label>
-            Phone Number:
-            {editable ? (
-              <input
-                type="tel"
-                name="phoneNumber"
-                value={formData.phoneNumber}
-                onChange={handleChange}
-                className="resume-input"
-              />
-            ) : (
-              <div className="resume-display">{formData.phoneNumber}</div>
-            )}
-          </label>
-          <br />
-          <label>
-            Interests:
-            {editable ? (
-              <textarea
-                name="interests"
-                value={formData.interests}
-                onChange={handleChange}
-                className="resume-textarea"
-              />
-            ) : (
-              <div className="resume-display">{formData.interests}</div>
-            )}
-          </label>
-          <br />
-          <label>
-            Overview:
-            {editable ? (
-              <textarea
-                name="overview"
-                value={formData.overview}
-                onChange={handleChange}
-                className="resume-textarea"
-              />
-            ) : (
-              <div className="resume-display">{formData.overview}</div>
-            )}
-          </label>
-          <label>
-            Education:
-            {editable ? (
-              <textarea
-                name="education"
-                value={formData.education}
-                onChange={handleChange}
-                className="resume-textarea"
-              />
-            ) : (
-              <div className="resume-display">{formData.education}</div>
-            )}
-          </label>
-          <br />
-          <label>
-            Projects:
-            {editable ? (
-              <textarea
-                name="projects"
-                value={formData.projects}
-                onChange={handleChange}
-                className="resume-textarea"
-              />
-            ) : (
-              <div className="resume-display">{formData.projects}</div>
-            )}
-          </label>
-          <br />
-          <label>
-            Skills:
-            {editable ? (
-              <textarea
-                name="skills"
-                value={formData.skills}
-                onChange={handleChange}
-                className="resume-textarea"
-              />
-            ) : (
-              <div className="resume-display">{formData.skills}</div>
-            )}
-          </label>
-        </form>
+          </div>
+          <form className="resume-form">
+            <label>
+              Name:
+              {editable ? (
+                <input
+                  type="text"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  className="resume-input"
+                />
+              ) : (
+                <div className="resume-display">{formData.name}</div>
+              )}
+            </label>
+            <br />
+            <label>
+              Email:
+              {editable ? (
+                <input
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  className="resume-input"
+                />
+              ) : (
+                <div className="resume-display">{formData.email}</div>
+              )}
+            </label>
+            <br />
+            <label>
+              Phone Number:
+              {editable ? (
+                <input
+                  type="tel"
+                  name="phoneNumber"
+                  value={formData.phoneNumber}
+                  onChange={handleChange}
+                  className="resume-input"
+                />
+              ) : (
+                <div className="resume-display">{formData.phoneNumber}</div>
+              )}
+            </label>
+            <br />
+            <label>
+              Interests:
+              {editable ? (
+                <textarea
+                  name="interests"
+                  value={formData.interests}
+                  onChange={handleChange}
+                  className="resume-textarea"
+                />
+              ) : (
+                <div className="resume-display">{formData.interests}</div>
+              )}
+            </label>
+            <br />
+            <label>
+              Overview:
+              {editable ? (
+                <textarea
+                  name="overview"
+                  value={formData.overview}
+                  onChange={handleChange}
+                  className="resume-textarea"
+                />
+              ) : (
+                <div className="resume-display">{formData.overview}</div>
+              )}
+            </label>
+            <label>
+              Education:
+              {editable ? (
+                <textarea
+                  name="education"
+                  value={formData.education}
+                  onChange={handleChange}
+                  className="resume-textarea"
+                />
+              ) : (
+                <div className="resume-display">{formData.education}</div>
+              )}
+            </label>
+            <br />
+            <label>
+              Projects:
+              {editable ? (
+                <textarea
+                  name="projects"
+                  value={formData.projects}
+                  onChange={handleChange}
+                  className="resume-textarea"
+                />
+              ) : (
+                <div className="resume-display">{formData.projects}</div>
+              )}
+            </label>
+            <br />
+            <label>
+              Skills:
+              {editable ? (
+                <textarea
+                  name="skills"
+                  value={formData.skills}
+                  onChange={handleChange}
+                  className="resume-textarea"
+                />
+              ) : (
+                <div className="resume-display">{formData.skills}</div>
+              )}
+            </label>
+          </form>
+        </div>
       </div>
     </div>
   );

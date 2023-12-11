@@ -41,6 +41,11 @@
   margin-top: 5px;
   margin-bottom: 15px;
   box-sizing: border-box;
+  height: 300px;
+  margin-bottom: 10px;
+  resize: none;
+  border: 1px solid #102a54;
+  margin-top: 20px;
 }
 
 .new-post-button {
@@ -54,12 +59,4 @@
 }
 .new-post-button:hover {
   text-decoration: underline;
-}
-
-.new-post-textarea {
-  height: 300px;
-  margin-bottom: 10px;
-  resize: none;
-  border: 1px solid #102a54;
-  margin-top: 20px;
 }
