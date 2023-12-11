@@ -50,9 +50,6 @@ router.route("/:pId/applications/delete").delete(deleteApplication);
 // route link (http://localhost:4000/posts/myapplications)
 router.route("/myapplications").get(getMyApplications);
 
-// route link (http://localhost:4000/posts/myapplications)
-router.route("/myapplications").get(getMyApplications);
-
 // route link (http://localhost:4000/posts/postsWithApps)
 router.route("/postsWithApps").get(postsWithApps);
 
