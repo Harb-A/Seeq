@@ -17,4 +17,6 @@ const postSchema = new mongoose.Schema({
   hidden: Boolean
 }, {versionKey: false});
 
+postSchema.index({ user_id: 1 });
+
 module.exports = mongoose.model("Post", postSchema);
