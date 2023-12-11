@@ -40,3 +40,4 @@ app.use(express.json());
 app.use("/users", require("./Routes/UserRoutes"));
 app.use("/auth", require("./Routes/AuthRoutes"));
 app.use("/posts", require("./Routes/PostRoutes"));
+app.use("/resumes", require("./Routes/ResumeRoutes"));
