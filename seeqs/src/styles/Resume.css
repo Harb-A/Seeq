@@ -3,17 +3,41 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 100vh; /* Ensure the container takes at least the full height of the viewport */
+  min-height: 100vh;
+}
+
+.resume {
+  background-color: white;
+  width: 50%;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 16px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  height: 100vh;
+  overflow-y: auto;
+}
+
+.resume-header {
+  width: 100%;
+  margin: auto;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-content: space-between;
 }
 
 .resume-heading {
-  font-size: 24px;
-  margin-bottom: 20px;
+  font-size: 2rem;
+  color: #555;
+  margin-bottom: 10px;
+  width: 72%;
 }
 
 .resume-form {
-  width: 80%;
-  max-width: 600px; /* Adjust the max-width based on your design preferences */
+  width: 100%;
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 
 .resume-input,
@@ -25,13 +49,26 @@
   box-sizing: border-box;
 }
 
-.resume-save-btn,
 .resume-edit-btn {
-  background-color: #007bff;
+  background-color: #1c3263;
   color: #fff;
-  padding: 10px 15px;
   font-size: 16px;
   cursor: pointer;
   border: none;
   margin-bottom: 20px;
+  border-radius: 4px;
+  width: 12%;
+}
+
+.resume-textarea {
+  width: 100%;
+  padding: 8px;
+  margin-top: 5px;
+  margin-bottom: 15px;
+  box-sizing: border-box;
+  height: 100px;
+  margin-bottom: 10px;
+  resize: none;
+  border: 1px solid #102a54;
+  margin-top: 20px;
 }

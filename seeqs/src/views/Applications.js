@@ -5,6 +5,7 @@ import "../styles/Applications.css";
 
 import ReceivedApplication from "../components/ReceivedApplication.js";
 import MyApplication from "../components/MyApplication.js";
+import ApplicationJob from "../components/ApplicationJob.js";
 
 const Applications = () => {
   // Dummy array containing your job applications (later feed data from API)
@@ -138,6 +139,14 @@ const Applications = () => {
     },
   ];
 
+  const DummyJobPost = {
+    title: "Software Engineer",
+    position: "Full Stack Developer",
+    description:
+      "We are seeking a talented Software Engineer to join our dynamic team. The ideal candidate will have a strong background in full-stack development and a passion for creating innovative solutions. Join us in building cutting-edge applications that make a difference.",
+    skills: ["JavaScript", "React", "Node.js", "MongoDB", "RESTful APIs"],
+  };
+
   // State to determine whether to show your received applications or your applications
   const [showReceivedApplications, setShowReceivedApplications] =
     useState(false);
@@ -195,6 +204,7 @@ const Applications = () => {
           </button>
         </div>
 
+        <ApplicationJob post={DummyJobPost} />
         {/* Received or my applications based on state*/}
         <div className="applications-container">
           {showReceivedApplications
