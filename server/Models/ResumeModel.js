@@ -6,7 +6,7 @@ const ResumeSchema = new mongoose.Schema({
     data: Buffer,
     contentType: String
   },
-  Name: String,
+  name: String,
   education: String,
   email: String,
   interests: String,
@@ -15,6 +15,8 @@ const ResumeSchema = new mongoose.Schema({
   projects: String,
   skills: [String]
 }, { versionKey: false });
+
+ResumeSchema.index({ userId: 1 });
 
 const Resume = mongoose.model('Resume', ResumeSchema);
 module.exports = Resume;

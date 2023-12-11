@@ -43,15 +43,10 @@ const doResume = asyncHandler(async (req, res) => {
 });
 
 const getResume = asyncHandler(async (req, res) => {
-  const resume = await Resume.findOne({ userId: req.user.id });
+  const resume = await Resume.findOne({ userId: req.user.id }).select('-resume');
 
   if (resume) {
-    // Set the appropriate headers
-    res.setHeader('Content-Type', 'application/pdf');
-    res.setHeader('Content-Disposition', 'attachment; filename=resume.pdf');
-
-    // Send the resume data as a binary response
-    res.send(resume.resume.data);
+    res.json(resume);
   } else {
     res.status(404);
     throw new Error('Resume not found');
