@@ -11,8 +11,10 @@ const {
   paginatedHiddenPosts,
   hiding,
   apply,
+  getApplicationResume,
   accept,
   reject,
+  findMatchingPosts,
   deleteApplication,
   getMyApplications,
   postsWithApps
@@ -46,6 +48,9 @@ router.route("/hiding/:pId").put(hiding);
 // route link (http://localhost:4000/posts/:pId/apply)
 router.route("/:pId/apply").post(upload.single('resume'), apply);
 
+// route link (http://localhost:4000/posts/:pId/resume/:uId)
+router.route("/:pId/resume/:uId").get(getApplicationResume);
+
 router.route("/:pId/applications/delete").delete(deleteApplication);
 
 // route link (http://localhost:4000/posts/myapplications)
@@ -60,6 +65,8 @@ router.route("/:pId/applications/:aId/accept").put(accept);
 // route link (http://localhost:4000/posts/:pId/applications/:aId/reject)
 router.route("/:pId/applications/:aId/reject").put(reject);
 
+// route link (http://localhost:4000/posts/findMatchingPosts)
+router.route("/findMatchingPosts").get(findMatchingPosts);
 
 // route link (http://localhost:4000/posts/:pId)
 router.route("/:pId").get(getUserPosts);

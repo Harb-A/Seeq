@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const asyncHandler = require("express-async-handler");
 const Post = require("../Models/PostModel");
 const User = require("../Models/UserModel");
+const Resume = require("../Models/ResumeModel");
 const multer = require("multer");
 const upload = multer({ dest: "uploads/" });
 // const { post } = require("../Routes/AuthRoutes");
@@ -185,6 +186,37 @@ const apply = asyncHandler(async (req, res) => {
   console.log("Request file3:", req.body.resume);
 });
 
+const getApplicationResume = asyncHandler(async (req, res) => {
+  const postId = req.params.pId;
+  const userId = req.params.uId; // Assuming req.user._id contains the id of the current user
+
+  const post = await Post.findById(postId);
+
+  if (!post) {
+    res.status(404);
+    throw new Error("Post not found");
+  }
+
+  const application = post.applications.find(
+    (app) => app.user_id.toString() === userId.toString()
+  );
+
+  if (!application) {
+    res.status(404);
+    throw new Error("Application not found");
+  }
+
+  const resume = application.resume;
+
+  if (!resume || !resume.data) {
+    res.status(404);
+    throw new Error("Resume not found");
+  }
+
+  res.set('Content-Type', resume.contentType);
+  return res.send(resume.data);
+});
+
 //this function takes the post id and the applicant id and accepts the applicant, also it checks if the user that made the post is the one accepting the application
 const accept = asyncHandler(async (req, res) => {
   const postId = req.params.pId;
@@ -218,6 +250,32 @@ const accept = asyncHandler(async (req, res) => {
 
   return res.json(updatedPost);
 });
+
+  const findMatchingPosts = asyncHandler(async (req, res) => {
+    const userId = req.user.id; // Assuming req.user._id contains the id of the current user
+
+    // Find the resume for the current user
+    const resume = await Resume.findOne({ userId: userId });
+
+    // If no resume found, do nothing
+    if (!resume) {
+      return res.json([]);
+    }
+
+    // Get the skills and interests from the resume
+    const { skills, interests } = resume;
+
+    // Combine skills and interests
+    const searchCriteria = [...skills, ...interests];
+
+    // Find posts that have at least one matching skill or interest
+    const matchingPosts = await Post.find({
+      skills: { $in: searchCriteria }
+    });
+
+    return res.json(matchingPosts);
+  });
+
 
 const reject = asyncHandler(async (req, res) => {
   const postId = req.params.pId;
@@ -369,10 +427,12 @@ module.exports = {
   paginatedPosts,
   paginatedPublicPosts,
   paginatedHiddenPosts,
+  getApplicationResume,
   hiding,
   apply,
   accept,
   reject,
+  findMatchingPosts,
   deleteApplication,
   getMyApplications,
   postsWithApps,
