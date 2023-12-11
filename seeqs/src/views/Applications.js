@@ -9,6 +9,7 @@ import ApplicationJob from "../components/ApplicationJob.js";
 
 const Applications = () => {
   const [myApplications, setMyApplications] = useState([]);
+  const [receivedApplications, setReceivedApplications] = useState([]);
 
   useEffect(() => {
     const fetchMyApplications = async () => {
@@ -43,72 +44,41 @@ const Applications = () => {
 
     fetchMyApplications();
   }, []);
-  // Dummy array containing received job applications (later feed data from API)
-  // const receivedApplications = [
-  //   {
-  //     id: 6,
-  //     title: "Frontend Developer",
-  //     description: "Building modern and responsive user interfaces",
-  //     applicant: {
-  //       name: "Applicant 1",
-  //       email: "applicant1@example.com",
-  //       phone: "987-654-3210",
-  //       coverLetter: "I am passionate about creating...",
-  //       resumeUrl: "/path/to/applicant1_resume.pdf",
-  //     },
-  //   },
-  //   {
-  //     id: 7,
-  //     title: "Graphic Designer",
-  //     description: "Design visually appealing graphics and illustrations",
-  //     applicant: {
-  //       name: "Applicant 2",
-  //       email: "applicant2@example.com",
-  //       phone: "987-654-3210",
-  //       coverLetter: "With a keen eye for aesthetics and creativity...",
-  //       resumeUrl: "/path/to/applicant2_resume.pdf",
-  //     },
-  //   },
-  //   {
-  //     id: 8,
-  //     title: "Data Analyst",
-  //     description:
-  //       "Analyzing and interpreting data to support business decisions",
-  //     applicant: {
-  //       name: "Applicant 3",
-  //       email: "applicant3@example.com",
-  //       phone: "987-654-3210",
-  //       coverLetter: "I possess strong analytical skills and a passion...",
-  //       resumeUrl: "/path/to/applicant3_resume.pdf",
-  //     },
-  //   },
-  //   {
-  //     id: 9,
-  //     title: "Content Writer",
-  //     description:
-  //       "Create engaging and informative content for various platforms",
-  //     applicant: {
-  //       name: "Applicant 4",
-  //       email: "applicant4@example.com",
-  //       phone: "987-654-3210",
-  //       coverLetter: "I am a skilled content writer with experience in...",
-  //       resumeUrl: "/path/to/applicant4_resume.pdf",
-  //     },
-  //   },
-  //   {
-  //     id: 10,
-  //     title: "Sales Representative",
-  //     description: "Drive sales and build strong customer relationships",
-  //     applicant: {
-  //       name: "Applicant 5",
-  //       email: "applicant5@example.com",
-  //       phone: "987-654-3210",
-  //       coverLetter:
-  //         "I am a results-oriented sales professional with a proven track record...",
-  //       resumeUrl: "/path/to/applicant5_resume.pdf",
-  //     },
-  //   },
-  // ];
+
+  useEffect(() => {
+    const fetchMyReceivedApplications = async () => {
+      try {
+        const accessToken = localStorage.getItem("accessToken");
+
+        if (!accessToken) {
+          console.error("Access token not found in localStorage.");
+          //setLoading(false);
+          return;
+        }
+
+        const myReceivedApplicationsResponse = await fetch(
+          "http://localhost:4000/posts/postsWithApps",
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        const myReceivedApplicationsData =
+          await myReceivedApplicationsResponse.json();
+        setReceivedApplications(myReceivedApplicationsData);
+        console.log(myReceivedApplicationsData);
+        //setLoading(false);
+      } catch (error) {
+        console.error("Error fetching My Received Applications:", error);
+        //setLoading(false);
+      }
+    };
+
+    fetchMyReceivedApplications();
+  }, []);
 
   const DummyJobPost = {
     title: "Software Engineer",

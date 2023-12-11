@@ -46,6 +46,36 @@ const DetailPage = () => {
     setAttachedFile(file);
   };
 
+  const handleSubmitApplication = async () => {
+    try {
+      const authToken = localStorage.getItem("accessToken");
+
+      const formData = new FormData();
+      formData.append("cover_letter", coverLetter);
+      //formData.append("resume", attachedFile);
+
+      console.log(formData);
+
+      const response = await fetch(`http://localhost:4000/posts/${id}/apply`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ cover_letter: "example", resume: null }),
+      });
+
+      if (!response.ok) {
+        console.error(`Server returned an error: ${response.status}`);
+        return;
+      }
+
+      console.log("Application submitted successfully!");
+    } catch (error) {
+      console.error("Error submitting application:", error);
+    }
+  };
+
   return (
     <div>
       <Taskbar />
@@ -87,13 +117,7 @@ const DetailPage = () => {
             onChange={handleFileChange}
           />
 
-          <button
-            className="submit-button"
-            onClick={() => {
-              console.log("Cover Letter:", coverLetter);
-              console.log("Attached File:", attachedFile);
-            }}
-          >
+          <button className="submit-button" onClick={handleSubmitApplication}>
             Submit Application
           </button>
         </div>

@@ -140,6 +140,9 @@ const apply = asyncHandler(async (req, res) => {
 
   const post = await Post.findById(postId);
 
+  console.log("Content-Type:", req.headers["content-type"]);
+  console.log(req.body.cover_letter);
+
   if (!post) {
     res.status(404);
     throw new Error("Post not found");
@@ -294,7 +297,7 @@ const getMyApplications = asyncHandler(async (req, res) => {
   // If there are no posts with user applications, send a 404 status code and an error message
   if (postsWithUserApplications.length === 0) {
     res.status(404);
-    throw new Error('No applications found');
+    throw new Error("No applications found");
   }
 
   return res.json(postsWithUserApplications);
