@@ -1,7 +1,7 @@
-import React from "react";
-import "../styles/PublicPost.css";
+import "../styles/MyPost.css";
 
-const PublicPost = ({ post }) => {
+const MyPost = ({ post, fetchPostsData, hidden }) => {
+  // API call to update the post from hidden to public and vice versa
   const toggleHidden = async () => {
     try {
       const postId = post._id;
@@ -20,6 +20,7 @@ const PublicPost = ({ post }) => {
 
       if (response.ok) {
         console.log("Post status updated to shown");
+        fetchPostsData();
       } else {
         console.error("Error updating post status");
       }
@@ -28,6 +29,7 @@ const PublicPost = ({ post }) => {
     }
   };
 
+  // API call to delete the post
   const deletePost = async () => {
     try {
       const postId = post._id;
@@ -43,6 +45,7 @@ const PublicPost = ({ post }) => {
 
       if (response.ok) {
         console.log("Post deleted");
+        fetchPostsData();
       } else {
         console.error("Error deleting post");
       }
@@ -52,18 +55,18 @@ const PublicPost = ({ post }) => {
   };
 
   return (
-    <div className="public-post">
+    <div className="my-post">
       <div className="post-header">
         <h3>{post.title}</h3>
         <p>{post.position}</p>
       </div>
       <p>{post.description}</p>
       <div className="important-skills">{post.skills.join(", ")}</div>
-      <div className="public-post-buttons">
-        <button onClick={toggleHidden} className="public-post-hide-button">
-          Hide
+      <div className="my-post-buttons">
+        <button onClick={toggleHidden} className="my-post-hide-button">
+          {hidden ? "Show" : "Hide"}
         </button>
-        <button onClick={deletePost} className="public-post-delete-button">
+        <button onClick={deletePost} className="my-post-delete-button">
           Delete
         </button>
       </div>
@@ -71,4 +74,4 @@ const PublicPost = ({ post }) => {
   );
 };
 
-export default PublicPost;
+export default MyPost;

@@ -1,0 +1,37 @@
+.resume-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh; /* Ensure the container takes at least the full height of the viewport */
+}
+
+.resume-heading {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.resume-form {
+  width: 80%;
+  max-width: 600px; /* Adjust the max-width based on your design preferences */
+}
+
+.resume-input,
+.resume-textarea,
+.resume-display {
+  width: 100%;
+  margin-bottom: 15px;
+  padding: 8px;
+  box-sizing: border-box;
+}
+
+.resume-save-btn,
+.resume-edit-btn {
+  background-color: #007bff;
+  color: #fff;
+  padding: 10px 15px;
+  font-size: 16px;
+  cursor: pointer;
+  border: none;
+  margin-bottom: 20px;
+}

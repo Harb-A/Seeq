@@ -34,7 +34,7 @@ const Profile = () => {
 
         if (response.ok) {
           const userData = await response.json();
-          console.log(userData);
+
           setFormData(userData);
         } else {
           console.error("Error fetching user data:", response.status);
@@ -74,7 +74,6 @@ const Profile = () => {
       });
 
       if (response.ok) {
-        console.log("Changes saved successfully");
         setEditMode(false);
       } else {
         console.error("Error saving changes");
@@ -165,7 +164,6 @@ const Profile = () => {
                 className="save-changes-button"
                 onClick={handleDiscardChanges}
               >
-                {" "}
                 Discard changes
               </button>
             </div>

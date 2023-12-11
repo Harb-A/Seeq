@@ -1,8 +1,6 @@
 import React from "react";
-import { useEffect, useState } from "react";
-
-import PublicPost from "../components/PublicPost.js";
-import HiddenPost from "../components/HiddenPost.js";
+import { useEffect, useState, useCallback } from "react";
+import MyPost from "../components/MyPost.js";
 import Taskbar from "../components/Taskbar.js";
 import { Link } from "react-router-dom";
 import "../styles/Posts.css";
@@ -32,85 +30,90 @@ const Posts = () => {
   const maxPerPage = 5;
 
   //API fetch to retrieve public posts data from mongoDB
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoadingPublicPosts(true);
+  const fetchPublicPosts = useCallback(async () => {
+    try {
+      setLoadingPublicPosts(true);
 
-        const accessToken = localStorage.getItem("accessToken");
-        const response = await fetch(
-          `http://localhost:4000/posts/paging/public/?page=${currentPage}`,
-          {
-            method: "GET",
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-              "Content-Type": "application/json",
-            },
-          }
-        );
-
-        if (response.ok) {
-          const data = await response.json();
-          // Assuming the API returns an array of job posts and hidden posts
-          setPublicPostsData(data);
-        } else {
-          console.error(
-            "Failed to fetch data:",
-            response.status,
-            response.statusText
-          );
+      const accessToken = localStorage.getItem("accessToken");
+      const response = await fetch(
+        `http://localhost:4000/posts/paging/public/?page=${currentPage}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            "Content-Type": "application/json",
+          },
         }
-      } catch (error) {
-        console.error("Error during fetch:", error);
-      } finally {
-        setLoadingPublicPosts(false);
-      }
-    };
+      );
 
-    fetchData();
+      if (response.ok) {
+        const data = await response.json();
+        setPublicPostsData(data);
+      } else {
+        console.error(
+          "Failed to fetch data:",
+          response.status,
+          response.statusText
+        );
+      }
+    } catch (error) {
+      console.error("Error during fetch:", error);
+    } finally {
+      setLoadingPublicPosts(false);
+    }
   }, [currentPage]);
+  useEffect(() => {
+    fetchPublicPosts();
+  }, [currentPage, fetchPublicPosts]);
 
   //API fetch to retrieve hidden posts data from mongoDB
-  useEffect(() => {
-    const fetchHiddenData = async () => {
-      try {
-        setLoadingHiddenPosts(true);
-        const accessToken = localStorage.getItem("accessToken");
-        const response = await fetch(
-          `http://localhost:4000/posts/paging/hidden/?page=${currentPage}`,
-          {
-            method: "GET",
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-              "Content-Type": "application/json",
-            },
-          }
-        );
-
-        if (response.ok) {
-          const data = await response.json();
-          setHiddenPostsData(data);
-          console.log(data, "hidden data");
-        } else {
-          console.error(
-            "Failed to fetch hidden data:",
-            response.status,
-            response.statusText
-          );
+  const fetchHiddenPosts = useCallback(async () => {
+    try {
+      setLoadingHiddenPosts(true);
+      const accessToken = localStorage.getItem("accessToken");
+      const response = await fetch(
+        `http://localhost:4000/posts/paging/hidden/?page=${currentPage}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            "Content-Type": "application/json",
+          },
         }
-      } catch (error) {
-        console.error("Error during hidden fetch:", error);
-      } finally {
-        setLoadingHiddenPosts(false);
-      }
-    };
+      );
 
-    fetchHiddenData();
+      if (response.ok) {
+        const data = await response.json();
+        setHiddenPostsData(data);
+      } else {
+        console.error(
+          "Failed to fetch hidden data:",
+          response.status,
+          response.statusText
+        );
+      }
+    } catch (error) {
+      console.error("Error during hidden fetch:", error);
+    } finally {
+      setLoadingHiddenPosts(false);
+    }
   }, [currentPage]);
+  useEffect(() => {
+    fetchHiddenPosts();
+  }, [currentPage, fetchHiddenPosts]);
+
+  //Refresh posts data in the arrays
+  const refreshPostsData = async () => {
+    try {
+      await fetchPublicPosts();
+      await fetchHiddenPosts();
+    } catch (error) {
+      console.error("Error fetching posts data:", error);
+    }
+  };
 
   //Depending on state, select the corresponding list of posts
-  const postsToShow = showHiddenPosts ? hiddenPostsData : publicPostsData;
-  const displayedPosts = postsToShow;
+  const displayedPosts = showHiddenPosts ? hiddenPostsData : publicPostsData;
 
   return (
     <div>
@@ -140,25 +143,37 @@ const Posts = () => {
 
         {/* Display "Loading..." message while data is being fetched */}
         {loadingPublicPosts || loadingHiddenPosts ? (
-          <div>Loading...</div>
+          <div className="api-status-container">Loading...</div>
         ) : null}
 
         {/* Display "Nothing found" message if there are no posts */}
         {!loadingPublicPosts &&
         !loadingHiddenPosts &&
         displayedPosts.length === 0 ? (
-          <div>Nothing found.</div>
+          <div className="api-status-container">Nothing found.</div>
         ) : null}
 
         {/* Public or hidden posts based on state*/}
         <div className="posts-container">
           {showHiddenPosts
             ? displayedPosts.map((post) => (
-                <HiddenPost key={post._id} post={post} />
+                <MyPost
+                  key={post._id}
+                  post={post}
+                  fetchPostsData={refreshPostsData}
+                  hidden={true}
+                />
               ))
             : displayedPosts.map((post) => {
                 console.log(post);
-                return <PublicPost key={post._id} post={post} />;
+                return (
+                  <MyPost
+                    key={post._id}
+                    post={post}
+                    fetchPostsData={refreshPostsData}
+                    hidden={false}
+                  />
+                );
               })}
         </div>
 
