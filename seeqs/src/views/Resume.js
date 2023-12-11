@@ -17,34 +17,56 @@ const Resume = () => {
   });
 
   useEffect(() => {
-    // Fetch data from the database or API and update formData
     fetchDataFromDatabase();
-  }, []); // Run this effect only once when the component mounts
+  }, []);
 
-  const fetchDataFromDatabase = () => {
-    // Replace this with actual API call or database interaction
-    // For simplicity, using a dummy data fetch
-    const dummyData = {
-      name: "John Doe",
-      email: "john.doe@example.com",
-      phoneNumber: "123-456-7890",
-      interests: "Web Development, Design",
-      overview:
-        "Experienced web developer with a passion for creating interactive and user-friendly applications.",
-      education: "Bachelor of Science in Computer Science, XYZ University",
-      projects: "Project 1: XYZ Project\nProject 2: ABC Project",
-      skills: "JavaScript, React, HTML, CSS",
-    };
+  const fetchDataFromDatabase = async () => {
+    try {
+      // Get the access token from localStorage
+      const accessToken = localStorage.getItem("accessToken");
 
-    setFormData(dummyData);
+      if (!accessToken) {
+        // Handle the case where the access token is not available
+        console.error("Access token not found in localStorage.");
+        return;
+      }
+
+      const response = await fetch("http://localhost:4000/resumes/", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/pdf",
+        },
+      });
+
+      if (!response.ok) {
+        console.error(`Server returned an error: ${response.status}`);
+        return;
+      }
+
+      const data = await response.json();
+      setFormData(data);
+      console.log("Data from server:", data);
+    } catch (error) {
+      console.error("Error during fetch:", error);
+    }
   };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
+
+    if (name === "skills") {
+      const skillsArray = value.split(",").map((skill) => skill.trim());
+      setFormData((prevData) => ({
+        ...prevData,
+        [name]: skillsArray,
+      }));
+    } else {
+      setFormData((prevData) => ({
+        ...prevData,
+        [name]: value,
+      }));
+    }
   };
 
   const handleEditClick = () => {
@@ -52,15 +74,57 @@ const Resume = () => {
   };
 
   const handleSaveClick = () => {
-    // Save data to the database or API
-    saveDataToDatabase();
+    const pdf = generatePDF();
+    const pdfDataUrl = pdf.output("dataurl");
+    saveDataToDatabase(pdfDataUrl);
     setEditable(false);
   };
 
-  const saveDataToDatabase = () => {
-    // Replace this with actual API call or database interaction
-    // For simplicity, using a console log to show the saved data
-    console.log("Saving data to the database:", formData);
+  const saveDataToDatabase = async (pdfDataUrl) => {
+    try {
+      // Get the access token from localStorage
+      const accessToken = localStorage.getItem("accessToken");
+
+      if (!accessToken) {
+        // Handle the case where the access token is not available
+        console.error("Access token not found in localStorage.");
+        return;
+      }
+
+      const fd = new FormData();
+      fd.append("name", formData.name);
+      fd.append("email", formData.email);
+      fd.append("phoneNumber", formData.phoneNumber);
+      fd.append("interests", formData.interests);
+      fd.append("overview", formData.overview);
+      fd.append("education", formData.education);
+      fd.append("projects", formData.projects);
+      fd.append("skills", formData.skills);
+
+      // Create a Blob from the PDF data URL
+      const pdfBlob = await fetch(pdfDataUrl).then((res) => res.blob());
+      // Append the PDF data as a file
+      fd.append("resume", pdfBlob, "resume.pdf");
+
+      console.log(fd);
+
+      const response = await fetch("http://localhost:4000/resumes/upload", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: fd,
+      });
+
+      if (!response.ok) {
+        console.error(`Server returned an error: ${response.status}`);
+        return;
+      }
+
+      console.log("Data successfully uploaded to the server.");
+    } catch (error) {
+      console.error("Error during upload:", error);
+    }
   };
 
   const handleDownloadPDF = () => {
@@ -108,9 +172,55 @@ const Resume = () => {
       pdf.internal.pageSize.height - 10,
       { align: "center" }
     );
-
-    // Save the PDF with a specific name
     pdf.save("resume.pdf");
+  };
+
+  const generatePDF = () => {
+    const pdf = new jsPDF();
+    pdf.setFontSize(12);
+
+    // Add header
+    pdf.setFont("helvetica", "bold");
+    pdf.setFontSize(18);
+    pdf.text("Resume", pdf.internal.pageSize.width / 2, 20, {
+      align: "center",
+    });
+
+    // Add contact information
+    pdf.setFont("helvetica", "normal");
+    pdf.setFontSize(12);
+    pdf.text(`${formData.name}`, 20, 40);
+    pdf.text(`Email: ${formData.email}`, 20, 50);
+    pdf.text(`Phone: ${formData.phoneNumber}`, 20, 60);
+
+    let currentY = 80; // Set initial Y-coordinate for the first category
+
+    // Add sections with bold subtitles and headers
+    const addCategory = (title, content) => {
+      pdf.setFont("helvetica", "bold");
+      pdf.text(title, 20, currentY);
+      currentY += 10; // Adjust the Y-coordinate to reduce space
+      pdf.setFont("helvetica", "normal");
+      pdf.setFontSize(12);
+      pdf.text(content, 20, currentY);
+      currentY += 30; // Adjust the Y-coordinate to reduce space
+    };
+
+    addCategory("Overview", formData.overview);
+    addCategory("Education", formData.education);
+    addCategory("Projects", formData.projects);
+    addCategory("Skills", formData.skills);
+
+    // Add footer
+    pdf.setFont("helvetica", "italic");
+    pdf.setFontSize(10);
+    pdf.text(
+      "Generated by SEEQS",
+      pdf.internal.pageSize.width / 2,
+      pdf.internal.pageSize.height - 10,
+      { align: "center" }
+    );
+    return pdf; // Return the generated PDF
   };
 
   return (

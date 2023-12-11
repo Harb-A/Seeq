@@ -29,11 +29,15 @@ const doResume = asyncHandler(async (req, res) => {
     skills: req.body.skills,
   };
 
-  const resume = await Resume.findOneAndUpdate({ userId: req.user.id }, resumeData, {
-    upsert: true,
-    new: true,
-    setDefaultsOnInsert: true,
-  });
+  const resume = await Resume.findOneAndUpdate(
+    { userId: req.user.id },
+    resumeData,
+    {
+      upsert: true,
+      new: true,
+      setDefaultsOnInsert: true,
+    }
+  );
 
   if (resume) {
     res.status(201).send("Resume uploaded successfully.");
@@ -47,14 +51,14 @@ const getResume = asyncHandler(async (req, res) => {
 
   if (resume) {
     // Set the appropriate headers
-    res.setHeader('Content-Type', 'application/pdf');
-    res.setHeader('Content-Disposition', 'attachment; filename=resume.pdf');
+    res.setHeader("Content-Type", "application/pdf");
+    res.setHeader("Content-Disposition", "attachment; filename=resume.pdf");
 
     // Send the resume data as a binary response
     res.send(resume.resume.data);
   } else {
     res.status(404);
-    throw new Error('Resume not found');
+    throw new Error("Resume not found");
   }
 });
 
