@@ -3,14 +3,16 @@ const mongoose = require("mongoose");
 const asyncHandler = require("express-async-handler");
 const Post = require("../Models/PostModel");
 const User = require("../Models/UserModel");
+const multer = require('multer');
+const upload = multer();
 // const { post } = require("../Routes/AuthRoutes");
 require("dotenv").config();
 
 // route link (http://localhost:4000/posts/)
 const getPosts = asyncHandler(async (req, res) => {
-  const post = await Post.find({});
-  console.log(post.skills);
-  res.json(post);
+  const userId = req.user.id;
+  const posts = await Post.find({ user_id: { $ne: userId } });
+  res.json(posts);
 });
 // route link (http://localhost:4000/posts/myposts)
 const getMyPosts = asyncHandler(async (req, res) => {
@@ -135,39 +137,49 @@ const hiding = asyncHandler(async (req, res) => {
 });
 
 const apply = asyncHandler(async (req, res) => {
-  const postId = req.params.pId;
-  const userId = req.user.id;
+  upload.single('resume')(req, res, async (err) => {
+    if (err) {
+      return res.status(400).json({ error: err.message });
+    }
 
-  const post = await Post.findById(postId);
+    const postId = req.params.pId;
+    const userId = req.user.id;
 
-  console.log("Content-Type:", req.headers["content-type"]);
-  console.log(req.body.cover_letter);
+    console.log("Content-Type:", req.headers["content-type"]);
+    console.log(req.body.cover_letter);
 
-  if (!post) {
-    res.status(404);
-    throw new Error("Post not found");
-  }
+    const post = await Post.findById(postId);
 
-  const existingApplication = post.applications.find(
-    (app) => app.user_id.toString() === userId.toString()
-  );
+    if (!post) {
+      res.status(404);
+      throw new Error("Post not found");
+    }
 
-  if (existingApplication) {
-    return res
-      .status(400)
-      .json({ message: "You have already applied to this post" });
-  }
+    const existingApplication = post.applications.find(
+      (app) => app.user_id.toString() === userId.toString()
+    );
 
-  const newApplication = {
-    user_id: userId,
-    cover_letter: req.body.cover_letter, // Assuming the cover letter is sent in the request body
-    accepted: 0,
-  };
+    if (existingApplication) {
+      return res
+        .status(400)
+        .json({ message: "You have already applied to this post" });
+    }
 
-  post.applications.push(newApplication);
-  const updatedPost = await post.save();
+    const newApplication = {
+      user_id: userId,
+      cover_letter: req.body.cover_letter,
+      accepted: 0,
+      resume: {
+        data: req.file.buffer,
+        contentType: req.file.mimetype
+      }
+    };
 
-  return res.json(updatedPost);
+    post.applications.push(newApplication);
+    const updatedPost = await post.save();
+
+    return res.json(updatedPost);
+  });
 });
 
 //this function takes the post id and the applicant id and accepts the applicant, also it checks if the user that made the post is the one accepting the application

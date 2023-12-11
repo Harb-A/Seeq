@@ -3,7 +3,11 @@ const mongoose = require('mongoose');
 const applicationSchema = new mongoose.Schema({
   user_id: mongoose.Schema.Types.ObjectId,
   cover_letter: String,
-  accepted: Number
+  accepted: Number,
+  resume: {
+    data: Buffer,
+    contentType: String
+  }
 });
 
 const postSchema = new mongoose.Schema({
