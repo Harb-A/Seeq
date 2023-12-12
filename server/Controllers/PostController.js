@@ -268,26 +268,19 @@ const accept = asyncHandler(async (req, res) => {
     // Get the skills and interests from the resume
     const { skills, interests } = resume;
 
-    // Combine skills and interests
-    const searchCriteria = [...skills, ...interests];
+    // Combine skills and interests and convert to lowercase
+    const searchCriteria = [...skills, ...interests].map(skill => skill.toLowerCase());
 
     // Find posts that have at least one matching skill or interest
-    const matchingPosts = await Post.find({
-      skills: { $in: searchCriteria }
-    })
-    .skip(skip)
-    .limit(limit);
+    const matchingPosts = await Post.aggregate([
+      { $addFields: { lowerCaseSkills: { $map: { input: "$skills", as: "skill", in: { $toLower: "$$skill" } } } } },
+      { $match: { lowerCaseSkills: { $in: searchCriteria } } },
+      { $skip: skip },
+      { $limit: limit },
+      { $project: { lowerCaseSkills: 0 } }
+    ]);
 
-    // Get the total count of matching posts
-    const count = await Post.countDocuments({
-      skills: { $in: searchCriteria }
-    });
-
-    return res.json({
-      totalPages: Math.ceil(count / limit),
-      currentPage: page,
-      posts: matchingPosts
-    });
+    return res.json(matchingPosts);
   });
 
 
