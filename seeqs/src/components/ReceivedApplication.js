@@ -71,6 +71,43 @@ const ReceivedApplication = ({ application, postID }) => {
     }
   };
 
+  const handleViewResume = async () => {
+    try {
+      const postId = postID;
+      const userId = application.user_id;
+
+      const apiUrl = `http://localhost:4000/posts/${postId}/resume/${application.user_id}`;
+
+      const accessToken = localStorage.getItem("accessToken");
+
+      if (!accessToken) {
+        console.log("Access token not found. Redirecting to login page...");
+        navigate("/");
+        return;
+      }
+
+      const response = await fetch(apiUrl, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status} - ${response.statusText}`);
+      }
+
+      const blob = await response.blob();
+      console.log(blob);
+      const resumeUrl = URL.createObjectURL(blob);
+
+      // Open the PDF in a new window
+      window.open(resumeUrl, "_blank");
+    } catch (error) {
+      console.error("Error fetching or opening PDF:", error.message);
+    }
+  };
+
   const getStatusClassName = () => {
     // Use the accepted variable to determine the class name
     return application.accepted === 1
@@ -85,12 +122,7 @@ const ReceivedApplication = ({ application, postID }) => {
       <p className="cover-letter-content">{application.cover_letter}</p>
 
       <h3 className="resume-heading">Resume</h3>
-      <a
-        href="{resumeUrl}"
-        className="resume-link"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
+      <a href="#" className="resume-link" onClick={handleViewResume}>
         View Resume (PDF)
       </a>
 

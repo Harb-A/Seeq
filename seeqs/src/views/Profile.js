@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 const Profile = () => {
   const navigate = useNavigate();
   const [editMode, setEditMode] = useState(false);
+  const [editPass, setEditPass] = useState(false);
 
   const [formData, setFormData] = useState({
     firstName: "",
@@ -15,6 +16,17 @@ const Profile = () => {
     email: "",
     phone: "",
   });
+
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmNewPassword, setConfirmNewPassword] = useState("");
+
+  const handlePasswordChanges = (e) => {
+    const { name, value } = e.target;
+    if (name === "currentPassword") setCurrentPassword(value);
+    else if (name === "newPassword") setNewPassword(value);
+    else if (name === "confirmNewPassword") setConfirmNewPassword(value);
+  };
 
   useEffect(() => {
     // Fetch user data from API and set the initial form data
@@ -93,6 +105,37 @@ const Profile = () => {
     setEditMode(false);
   };
 
+  const updatePassword = async () => {
+    try {
+      const authToken = localStorage.getItem("accessToken");
+
+      const newPasswordData = {
+        currentPassword,
+        newPassword,
+      };
+
+      // Make an API call to update the password
+      const response = await fetch("http://localhost:4000/users/update", {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newPasswordData),
+      });
+
+      if (response.ok) {
+        // Password changed successfully, handle accordingly
+        console.log("Password changed successfully");
+        setEditPass(false); // Close the "Change Password" section
+      } else {
+        console.error("Error changing password:", response.status);
+      }
+    } catch (error) {
+      console.error("Error changing password:", error);
+    }
+  };
+
   return (
     <div>
       <Taskbar />
@@ -143,17 +186,26 @@ const Profile = () => {
               readOnly={!editMode}
             />
           </form>
-          {!editMode && (
-            <button
-              className="save-changes-button"
-              type="button"
-              onClick={handleEditClick}
-              disabled={editMode}
-            >
-              Edit
-            </button>
+          {!editMode && !editPass && (
+            <>
+              <button
+                className="save-changes-button"
+                type="button"
+                onClick={handleEditClick}
+                disabled={editMode}
+              >
+                Edit
+              </button>
+              <button
+                className="save-changes-button"
+                onClick={() => setEditPass(true)}
+                disabled={editMode}
+              >
+                Change Password
+              </button>
+            </>
           )}
-          {editMode && (
+          {editMode && !editPass && (
             <div className="update-profile-container">
               <button
                 type="button"
@@ -168,6 +220,32 @@ const Profile = () => {
               >
                 Discard changes
               </button>
+            </div>
+          )}
+          {editPass && (
+            <div className="change-password-container">
+              <label>Current Password</label>
+              <input
+                type="password"
+                name="currentPassword"
+                value={currentPassword}
+                onChange={handlePasswordChanges}
+              ></input>
+              <label>New Password</label>
+              <input
+                type="password"
+                name="newPassword"
+                value={newPassword}
+                onChange={handlePasswordChanges}
+              ></input>
+              <label>Confirm New Password</label>
+              <input
+                type="password"
+                name="confirmNewPassword"
+                value={confirmNewPassword}
+                onChange={handlePasswordChanges}
+              ></input>
+              <button onClick={updatePassword}>Change Password</button>
             </div>
           )}
         </div>
