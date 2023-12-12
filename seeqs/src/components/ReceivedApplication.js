@@ -1,10 +1,17 @@
 import React from "react";
 import "../styles/ReceivedApplication.css";
+import { useNavigate } from "react-router-dom";
 
 const ReceivedApplication = ({ application, postID }) => {
+  const navigate = useNavigate();
   const handleAccept = async () => {
     try {
       const accessToken = localStorage.getItem("accessToken");
+      if (!accessToken) {
+        // If not authenticated, redirect to the login page
+        console.log("Access token not found. Redirecting to login page...");
+        navigate("/"); // Adjust the path based on your route setup
+      }
 
       const apiUrl = `http://localhost:4000/posts/${postID}/applications/${application.user_id}/accept`;
 
@@ -33,6 +40,11 @@ const ReceivedApplication = ({ application, postID }) => {
   const handleReject = async () => {
     try {
       const accessToken = localStorage.getItem("accessToken");
+      if (!accessToken) {
+        // If not authenticated, redirect to the login page
+        console.log("Access token not found. Redirecting to login page...");
+        navigate("/"); // Adjust the path based on your route setup
+      }
 
       const apiUrl = `http://localhost:4000/posts/${postID}/applications/${application.user_id}/reject`;
 

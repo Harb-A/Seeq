@@ -3,8 +3,10 @@ import "../styles/Profile.css";
 import Taskbar from "../components/Taskbar";
 
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Profile = () => {
+  const navigate = useNavigate();
   const [editMode, setEditMode] = useState(false);
 
   const [formData, setFormData] = useState({
@@ -20,9 +22,9 @@ const Profile = () => {
       try {
         const accessToken = localStorage.getItem("accessToken");
         if (!accessToken) {
-          // Handle the case where the access token is not available
-          console.error("Access token not found in local storage");
-          return;
+          // If not authenticated, redirect to the login page
+          console.log("Access token not found. Redirecting to login page...");
+          navigate("/"); // Adjust the path based on your route setup
         }
 
         const response = await fetch("http://localhost:4000/users/current", {

@@ -35,6 +35,12 @@ const Dashboard = () => {
       try {
         setLoading(true);
         const accessToken = localStorage.getItem("accessToken");
+
+        if (!accessToken) {
+          // If not authenticated, redirect to the login page
+          console.log("Access token not found. Redirecting to login page...");
+          navigate("/"); // Adjust the path based on your route setup
+        }
         const response = await fetch(
           `http://localhost:4000/posts/paging/?page=${currentPage}`,
           {
@@ -68,6 +74,11 @@ const Dashboard = () => {
       try {
         setLoading(true);
         const accessToken = localStorage.getItem("accessToken");
+        if (!accessToken) {
+          // If not authenticated, redirect to the login page
+          console.log("Access token not found. Redirecting to login page...");
+          navigate("/"); // Adjust the path based on your route setup
+        }
         const response = await fetch(
           `http://localhost:4000/posts/findMatchingPosts?page=${currentPage}`,
           {
