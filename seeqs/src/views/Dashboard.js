@@ -69,7 +69,7 @@ const Dashboard = () => {
         setLoading(true);
         const accessToken = localStorage.getItem("accessToken");
         const response = await fetch(
-          `http://localhost:4000/posts/findMatchingPosts/?page=${currentPage}`,
+          `http://localhost:4000/posts/findMatchingPosts?page=${currentPage}`,
           {
             headers: {
               Authorization: `Bearer ${accessToken}`,
@@ -85,7 +85,8 @@ const Dashboard = () => {
 
         const data = await response.json();
 
-        setAllRecommendedPostsData(data);
+        setAllRecommendedPostsData(data.posts);
+        console.log(data);
       } catch (error) {
         console.error("Error fetching data:", error);
       } finally {
