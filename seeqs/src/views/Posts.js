@@ -2,10 +2,11 @@ import React from "react";
 import { useEffect, useState, useCallback } from "react";
 import MyPost from "../components/MyPost.js";
 import Taskbar from "../components/Taskbar.js";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "../styles/Posts.css";
 
 const Posts = () => {
+  const navigate = useNavigate();
   // Use state to keep track of public posts
   const [publicPostsData, setPublicPostsData] = useState([]);
 
@@ -35,6 +36,12 @@ const Posts = () => {
       setLoadingPublicPosts(true);
 
       const accessToken = localStorage.getItem("accessToken");
+
+      if (!accessToken) {
+        // If not authenticated, redirect to the login page
+        console.log("Access token not found. Redirecting to login page...");
+        navigate("/"); // Adjust the path based on your route setup
+      }
       const response = await fetch(
         `http://localhost:4000/posts/paging/public/?page=${currentPage}`,
         {
@@ -71,6 +78,11 @@ const Posts = () => {
     try {
       setLoadingHiddenPosts(true);
       const accessToken = localStorage.getItem("accessToken");
+      if (!accessToken) {
+        // If not authenticated, redirect to the login page
+        console.log("Access token not found. Redirecting to login page...");
+        navigate("/"); // Adjust the path based on your route setup
+      }
       const response = await fetch(
         `http://localhost:4000/posts/paging/hidden/?page=${currentPage}`,
         {

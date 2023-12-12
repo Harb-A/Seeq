@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import Taskbar from "../components/Taskbar.js";
 import "../styles/Applications.css";
 import ApplicationJob from "../components/ApplicationJob.js";
+import { useNavigate } from "react-router-dom";
 
 const Applications = () => {
   const [myApplications, setMyApplications] = useState([]);
@@ -11,14 +12,17 @@ const Applications = () => {
   const [loadingReceivedApplications, setLoadingReceivedApplications] =
     useState(true);
 
+  const navigate = useNavigate();
+
   useEffect(() => {
     const fetchMyApplications = async () => {
       try {
         const accessToken = localStorage.getItem("accessToken");
 
         if (!accessToken) {
-          console.error("Access token not found in localStorage.");
-          return;
+          // If not authenticated, redirect to the login page
+          console.log("Access token not found. Redirecting to login page...");
+          navigate("/"); // Adjust the path based on your route setup
         }
 
         const myApplicationsResponse = await fetch(
@@ -47,6 +51,11 @@ const Applications = () => {
     const fetchMyReceivedApplications = async () => {
       try {
         const accessToken = localStorage.getItem("accessToken");
+        if (!accessToken) {
+          // If not authenticated, redirect to the login page
+          console.log("Access token not found. Redirecting to login page...");
+          navigate("/"); // Adjust the path based on your route setup
+        }
 
         if (!accessToken) {
           console.error("Access token not found in localStorage.");

@@ -2,8 +2,10 @@ import React, { useState, useEffect } from "react";
 import "../styles/Resume.css";
 import Taskbar from "../components/Taskbar";
 import jsPDF from "jspdf";
+import { useNavigate } from "react-router-dom";
 
 const Resume = () => {
+  const navigate = useNavigate();
   const [editable, setEditable] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
@@ -26,9 +28,9 @@ const Resume = () => {
       const accessToken = localStorage.getItem("accessToken");
 
       if (!accessToken) {
-        // Handle the case where the access token is not available
-        console.error("Access token not found in localStorage.");
-        return;
+        // If not authenticated, redirect to the login page
+        console.log("Access token not found. Redirecting to login page...");
+        navigate("/"); // Adjust the path based on your route setup
       }
 
       const response = await fetch("http://localhost:4000/resumes/", {
