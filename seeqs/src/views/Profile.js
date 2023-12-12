@@ -105,13 +105,22 @@ const Profile = () => {
     setEditMode(false);
   };
 
+  const alertPasswordChange = () => {
+    window.alert("New Password and Confirm Password do not match.");
+  };
+
   const updatePassword = async () => {
     try {
       const authToken = localStorage.getItem("accessToken");
 
+      if (newPassword !== confirmNewPassword) {
+        console.error("New Password and Confirm Password do not match.");
+        alertPasswordChange();
+        return;
+      }
       const newPasswordData = {
-        currentPassword,
-        newPassword,
+        currentPassword: currentPassword,
+        password: newPassword,
       };
 
       // Make an API call to update the password
