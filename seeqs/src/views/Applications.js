@@ -2,14 +2,14 @@ import React, { useEffect, useState } from "react";
 
 import Taskbar from "../components/Taskbar.js";
 import "../styles/Applications.css";
-
-import ReceivedApplication from "../components/ReceivedApplication.js";
-import MyApplication from "../components/MyApplication.js";
 import ApplicationJob from "../components/ApplicationJob.js";
 
 const Applications = () => {
   const [myApplications, setMyApplications] = useState([]);
   const [receivedApplications, setReceivedApplications] = useState([]);
+  const [loadingMyApplications, setLoadingMyApplications] = useState(true);
+  const [loadingReceivedApplications, setLoadingReceivedApplications] =
+    useState(true);
 
   useEffect(() => {
     const fetchMyApplications = async () => {
@@ -18,7 +18,6 @@ const Applications = () => {
 
         if (!accessToken) {
           console.error("Access token not found in localStorage.");
-          //setLoading(false);
           return;
         }
 
@@ -34,11 +33,10 @@ const Applications = () => {
 
         const myApplicationsData = await myApplicationsResponse.json();
         setMyApplications(myApplicationsData);
-        console.log(myApplicationsData);
-        //setLoading(false);
+        setLoadingMyApplications(false);
       } catch (error) {
         console.error("Error fetching My Applications:", error);
-        // setLoading(false);
+        setLoadingMyApplications(false);
       }
     };
 
@@ -52,7 +50,7 @@ const Applications = () => {
 
         if (!accessToken) {
           console.error("Access token not found in localStorage.");
-          //setLoading(false);
+          setLoadingReceivedApplications(false);
           return;
         }
 
@@ -69,24 +67,15 @@ const Applications = () => {
         const myReceivedApplicationsData =
           await myReceivedApplicationsResponse.json();
         setReceivedApplications(myReceivedApplicationsData);
-        console.log(myReceivedApplicationsData);
-        //setLoading(false);
+        setLoadingReceivedApplications(false);
       } catch (error) {
         console.error("Error fetching My Received Applications:", error);
-        //setLoading(false);
+        setLoadingReceivedApplications(false);
       }
     };
 
     fetchMyReceivedApplications();
   }, []);
-
-  const DummyJobPost = {
-    title: "Software Engineer",
-    position: "Full Stack Developer",
-    description:
-      "We are seeking a talented Software Engineer to join our dynamic team. The ideal candidate will have a strong background in full-stack development and a passion for creating innovative solutions. Join us in building cutting-edge applications that make a difference.",
-    skills: ["JavaScript", "React", "Node.js", "MongoDB", "RESTful APIs"],
-  };
 
   // State to determine whether to show your received applications or your applications
   const [showReceivedApplications, setShowReceivedApplications] =
@@ -126,20 +115,19 @@ const Applications = () => {
 
         {/* Received or my applications based on state*/}
         <div className="applications-container">
-          {showReceivedApplications
-            ? displayedApplications.map((application) => (
-                <ReceivedApplication
-                  key={application.id}
-                  name={application.applicant.name}
-                  email={application.applicant.email}
-                  phone={application.applicant.phone}
-                  coverLetter={application.applicant.coverLetter}
-                  resumeUrl={application.applicant.resumeUrl}
-                />
-              ))
-            : displayedApplications.map((application) => (
-                <ApplicationJob key={application._id} post={application} />
-              ))}
+          {loadingMyApplications || loadingReceivedApplications ? (
+            <div className="api-status-container">Loading...</div>
+          ) : displayedApplications.length === 0 ? (
+            <div className="api-status-container">Nothing found</div>
+          ) : (
+            displayedApplications.map((application) => (
+              <ApplicationJob
+                key={application._id}
+                post={application}
+                isMine={!showReceivedApplications}
+              />
+            ))
+          )}
         </div>
       </div>
     </div>

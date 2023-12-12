@@ -1,10 +1,9 @@
 import React from "react";
 import "../styles/ApplicationJob.css";
 import MyApplication from "./MyApplication";
+import ReceivedApplication from "./ReceivedApplication";
 
-// Function to delete an application
-
-const ApplicationJob = ({ post }) => {
+const ApplicationJob = ({ post, isMine }) => {
   return (
     <>
       <div className="application-job-card">
@@ -19,13 +18,21 @@ const ApplicationJob = ({ post }) => {
         <br />
       </div>
       <div>
-        {post.applications.map((application) => (
-          <MyApplication
-            key={application._id}
-            application={application}
-            postID={post._id}
-          />
-        ))}
+        {isMine
+          ? post.applications.map((application) => (
+              <MyApplication
+                key={application._id}
+                application={application}
+                postID={post._id}
+              />
+            ))
+          : post.applications.map((application) => (
+              <ReceivedApplication
+                key={application._id}
+                application={application}
+                postID={post._id}
+              />
+            ))}
       </div>
     </>
   );

@@ -96,7 +96,7 @@ const NewPost = () => {
           <label>Important skills: skillA, skillB, skillC...</label>
           <input
             type="text"
-            value={skills.join(", ")}
+            value={skills}
             onChange={handleSkillChange}
             className="new-post-input"
           />

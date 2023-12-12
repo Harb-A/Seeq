@@ -31,8 +31,17 @@ const MyApplication = ({ application, postID }) => {
       throw error;
     }
   };
+
+  const getStatusClassName = () => {
+    // Use the accepted variable to determine the class name
+    return application.accepted === 1
+      ? "accepted"
+      : application.accepted === -1
+      ? "rejected"
+      : "";
+  };
   return (
-    <div className="my-application">
+    <div className={`my-application ${getStatusClassName()}`}>
       <h2 className="applicant-name">{application.name}</h2>
 
       <h3 className="cover-letter-heading">Cover Letter</h3>

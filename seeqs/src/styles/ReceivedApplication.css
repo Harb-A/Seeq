@@ -1,5 +1,5 @@
 .received-application {
-  width: 95%;
+  width: 50%;
   margin: auto;
   background-color: #fff;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -8,6 +8,14 @@
   margin-bottom: 10px;
   box-sizing: border-box;
   transition: all 0.3s ease;
+}
+
+.accepted {
+  border: 1px solid #28a745;
+}
+
+.rejected {
+  border: 1px solid #dc3545;
 }
 
 .applicant-name {
