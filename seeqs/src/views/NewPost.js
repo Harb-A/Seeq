@@ -7,7 +7,7 @@ const NewPost = () => {
   const navigate = useNavigate();
   const [title, setTitle] = useState("");
   const [position, setPosition] = useState("");
-  const [skills, setSkills] = useState("");
+  const [skills, setSkills] = useState([]);
   const [description, setDescription] = useState("");
 
   const handleSkillChange = (e) => {
@@ -96,7 +96,7 @@ const NewPost = () => {
           <label>Important skills: skillA, skillB, skillC...</label>
           <input
             type="text"
-            value={skills}
+            value={skills.join(", ")}
             onChange={handleSkillChange}
             className="new-post-input"
           />

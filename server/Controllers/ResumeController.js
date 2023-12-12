@@ -12,22 +12,24 @@ const doResume = asyncHandler(async (req, res) => {
     res.status(400).send("No resume uploaded.");
     return;
   }
-
+  const skillArray = req.body.skills.split(",").map((item) => item.trim());
   const resumeData = {
     userId: req.user.id,
     resume: {
       data: req.file.buffer,
       contentType: req.file.mimetype,
     },
-    name: req.body.Name,
+    name: req.body.name,
     education: req.body.education,
     email: req.body.email,
     interests: req.body.interests,
     overview: req.body.overview,
     phone: req.body.phone,
     projects: req.body.projects,
-    skills: req.body.skills,
+    skills: skillArray,
   };
+
+  console.log(resumeData);
 
   const resume = await Resume.findOneAndUpdate(
     { userId: req.user.id },

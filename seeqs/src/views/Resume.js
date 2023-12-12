@@ -13,7 +13,7 @@ const Resume = () => {
     overview: "",
     education: "",
     projects: "",
-    skills: "",
+    skills: [],
   });
 
   useEffect(() => {
@@ -55,7 +55,7 @@ const Resume = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    if (name === "skills") {
+    if (name == "skills") {
       const skillsArray = value.split(",").map((skill) => skill.trim());
       setFormData((prevData) => ({
         ...prevData,
@@ -77,6 +77,7 @@ const Resume = () => {
     const pdf = generatePDF();
     const pdfDataUrl = pdf.output("dataurl");
     saveDataToDatabase(pdfDataUrl);
+    console.log("Form Data to be sent to server:", formData);
     setEditable(false);
   };
 
@@ -101,12 +102,12 @@ const Resume = () => {
       fd.append("projects", formData.projects);
       fd.append("skills", formData.skills);
 
+      console.log(formData.skills, "Skills array");
+
       // Create a Blob from the PDF data URL
       const pdfBlob = await fetch(pdfDataUrl).then((res) => res.blob());
       // Append the PDF data as a file
       fd.append("resume", pdfBlob, "resume.pdf");
-
-      console.log(fd);
 
       const response = await fetch("http://localhost:4000/resumes/upload", {
         method: "POST",

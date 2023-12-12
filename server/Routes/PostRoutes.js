@@ -17,10 +17,10 @@ const {
   findMatchingPosts,
   deleteApplication,
   getMyApplications,
-  postsWithApps
+  postsWithApps,
 } = require("../Controllers/PostController");
 const verifyJWT = require("../Middleware/VerifyJWT");
-const multer = require('multer');
+const multer = require("multer");
 const upload = multer();
 router.use(verifyJWT);
 
@@ -46,7 +46,7 @@ router.route("/create").post(createPost);
 router.route("/hiding/:pId").put(hiding);
 
 // route link (http://localhost:4000/posts/:pId/apply)
-router.route("/:pId/apply").post(upload.single('resume'), apply);
+router.route("/:pId/apply").post(upload.single("resume"), apply);
 
 // route link (http://localhost:4000/posts/:pId/resume/:uId)
 router.route("/:pId/resume/:uId").get(getApplicationResume);
@@ -73,7 +73,5 @@ router.route("/:pId").get(getUserPosts);
 
 // route link (http://localhost:4000/posts/:postId)
 router.delete("/:postId", deletePost);
-
-
 
 module.exports = router;

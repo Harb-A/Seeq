@@ -92,28 +92,11 @@ const Applications = () => {
   const [showReceivedApplications, setShowReceivedApplications] =
     useState(false);
 
-  // State for pagination
-  const [currentPage, setCurrentPage] = useState(1);
-  const maxPerPage = 5;
-  const indexOfLastApplication = currentPage * maxPerPage;
-  const indexOfFirstApplication = indexOfLastApplication - maxPerPage;
-
   // Depending on state, select the corresponding list of applications
   const applicationsToShow = showReceivedApplications
     ? receivedApplications
     : myApplications;
-  const displayedApplications = applicationsToShow.slice(
-    indexOfFirstApplication,
-    indexOfLastApplication
-  );
-
-  const goToNextPage = () => {
-    setCurrentPage((prevPage) => prevPage + 1);
-  };
-
-  const goToPreviousPage = () => {
-    setCurrentPage((prevPage) => prevPage - 1);
-  };
+  const displayedApplications = applicationsToShow;
 
   return (
     <div>
@@ -127,9 +110,7 @@ const Applications = () => {
             className={`applications-toggle ${
               showReceivedApplications ? "" : "active"
             }`}
-            onClick={() =>
-              setShowReceivedApplications(false) & setCurrentPage(1)
-            }
+            onClick={() => setShowReceivedApplications(false)}
           >
             My Applications
           </button>
@@ -137,15 +118,12 @@ const Applications = () => {
             className={`applications-toggle ${
               showReceivedApplications ? "active" : ""
             }`}
-            onClick={() =>
-              setShowReceivedApplications(true) & setCurrentPage(1)
-            }
+            onClick={() => setShowReceivedApplications(true)}
           >
             Received Applications
           </button>
         </div>
 
-        <ApplicationJob post={DummyJobPost} />
         {/* Received or my applications based on state*/}
         <div className="applications-container">
           {showReceivedApplications
@@ -160,30 +138,8 @@ const Applications = () => {
                 />
               ))
             : displayedApplications.map((application) => (
-                <MyApplication
-                  key={application.id}
-                  name={application.name}
-                  email={application.email}
-                  phone={application.phone}
-                  coverLetter={application.coverLetter}
-                  resumeUrl={application.resumeUrl}
-                />
+                <ApplicationJob key={application._id} post={application} />
               ))}
-        </div>
-
-        {/* Pagination bar to navigate pages of the applications if more than 5 */}
-        <div className="applications-pagination-container">
-          <button onClick={goToPreviousPage} disabled={currentPage === 1}>
-            &lt;
-          </button>
-          <div>{`Page ${currentPage}`}</div>
-          <button
-            onClick={goToNextPage}
-            disabled={indexOfLastApplication >= applicationsToShow.length}
-          >
-            &gt;
-          </button>
-          <br />
         </div>
       </div>
     </div>

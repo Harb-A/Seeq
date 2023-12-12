@@ -1,31 +1,46 @@
 import React from "react";
 import "../styles/MyApplication.css";
 
-const MyApplication = ({
-  name,
-  email,
-  phone,
-  coverLetter,
-  resumeUrl,
-  onDelete,
-}) => {
-  const handleDelete = () => {
-    console.log(`Application from ${name} deleted`);
-    onDelete();
-  };
+const MyApplication = ({ application, postID }) => {
+  const deleteApplication = async () => {
+    try {
+      const accessToken = localStorage.getItem("accessToken");
 
+      console.log(postID);
+
+      const apiUrl = `http://localhost:4000/posts/${postID}/applications/delete`;
+      const response = await fetch(apiUrl, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      });
+
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status} - ${response.statusText}`);
+      }
+      const data = await response.json();
+
+      console.log("Application deleted successfully:", data);
+
+      return data;
+    } catch (error) {
+      console.error("Error deleting application:", error.message);
+      throw error;
+    }
+  };
   return (
     <div className="my-application">
-      <h2 className="applicant-name">{name}</h2>
-      <p className="applicant-email">Email: {email}</p>
-      <p className="applicant-phone">Phone: {phone}</p>
+      <h2 className="applicant-name">{application.name}</h2>
 
       <h3 className="cover-letter-heading">Cover Letter</h3>
-      <p className="cover-letter-content">{coverLetter}</p>
+      <p className="cover-letter-content">{application.cover_letter}</p>
 
       <h3 className="resume-heading">Resume</h3>
       <a
-        href={resumeUrl}
+        href="{resumeUrl}"
         className="resume-link"
         target="_blank"
         rel="noopener noreferrer"
@@ -34,7 +49,7 @@ const MyApplication = ({
       </a>
 
       <div className="action-buttons">
-        <button className="delete-button" onClick={handleDelete}>
+        <button className="delete-button" onClick={deleteApplication}>
           Delete
         </button>
       </div>

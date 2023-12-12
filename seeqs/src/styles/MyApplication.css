@@ -1,5 +1,5 @@
 .my-application {
-  width: 95%;
+  width: 50%;
   margin: auto;
   background-color: #fff;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -8,6 +8,9 @@
   margin-bottom: 10px;
   box-sizing: border-box;
   transition: all 0.3s ease;
+
+  max-height: 500px;
+  overflow-y: auto;
 }
 
 .applicant-name {
