@@ -7,7 +7,7 @@ const NewPost = () => {
   const navigate = useNavigate();
   const [title, setTitle] = useState("");
   const [position, setPosition] = useState("");
-  const [skills, setSkills] = useState("");
+  const [skills, setSkills] = useState([]);
   const [description, setDescription] = useState("");
 
   const handleSkillChange = (e) => {
