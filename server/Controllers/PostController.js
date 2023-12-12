@@ -253,6 +253,9 @@ const accept = asyncHandler(async (req, res) => {
 
   const findMatchingPosts = asyncHandler(async (req, res) => {
     const userId = req.user.id; // Assuming req.user._id contains the id of the current user
+    const page = Number(req.query.page) || 1;
+    const limit = 5;
+    const skip = (page - 1) * limit;
 
     // Find the resume for the current user
     const resume = await Resume.findOne({ userId: userId });
@@ -271,9 +274,20 @@ const accept = asyncHandler(async (req, res) => {
     // Find posts that have at least one matching skill or interest
     const matchingPosts = await Post.find({
       skills: { $in: searchCriteria }
+    })
+    .skip(skip)
+    .limit(limit);
+
+    // Get the total count of matching posts
+    const count = await Post.countDocuments({
+      skills: { $in: searchCriteria }
     });
 
-    return res.json(matchingPosts);
+    return res.json({
+      totalPages: Math.ceil(count / limit),
+      currentPage: page,
+      posts: matchingPosts
+    });
   });
 
 
