@@ -12,7 +12,6 @@ const getUsers = asyncHandler(async (req, res) => {
 
 //return current user
 const getUser = asyncHandler(async (req, res) => {
-
   const user = await User.findById(req.user.id);
 
   if (!user) {
@@ -54,14 +53,16 @@ const updateUser = asyncHandler(async (req, res) => {
     const isMatch = await bcrypt.compare(fields.currentPassword, user.password);
 
     if (!isMatch) {
-      return res.status(400).json({ message: 'Current password is incorrect' });
+      return res.status(400).json({ message: "Current password is incorrect" });
     }
 
     // Hash the new password before saving
     fields.password = await bcrypt.hash(fields.password, 10);
   }
 
-  const updatedUser = await User.findByIdAndUpdate(userId, fields, { new: true });
+  const updatedUser = await User.findByIdAndUpdate(userId, fields, {
+    new: true,
+  });
 
   return res.json(updatedUser);
 });

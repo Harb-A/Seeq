@@ -96,7 +96,7 @@ const Dashboard = () => {
 
         const data = await response.json();
 
-        setAllRecommendedPostsData(data.posts);
+        setAllRecommendedPostsData(data);
         console.log(data);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -161,9 +161,14 @@ const Dashboard = () => {
       )}
       {/* Map data from predefined arrays to job card component and render them */}
       <div className="job-cards-container">
-        {displayedJobPosts.map((post) => (
-          <JobCard key={post._id} post={post} />
-        ))}
+        {showRecommendedPosts
+          ? allRecommendedPostsData.map((post) => (
+              <JobCard key={post._id} post={post} />
+            ))
+          : allPostsData.map((post) => <JobCard key={post._id} post={post} />)}
+        {/* {displayedJobPosts.map((post) => (
+          
+        ))} */}
       </div>
 
       {/* Pagination bar to navigate pages of the job posts if more than 5 */}
