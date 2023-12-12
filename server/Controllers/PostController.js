@@ -317,6 +317,28 @@ const reject = asyncHandler(async (req, res) => {
   return res.json(updatedPost);
 });
 
+const searchPosts = asyncHandler(async (req, res) => {
+  const searchTerm = req.query.q; // Assuming the search term is passed as a query parameter
+
+  // Use a regular expression for case-insensitive and partial matching
+  const regex = new RegExp(escapeRegex(searchTerm), 'gi');
+
+  // Find posts that have the search term in the title or skills
+  const matchingPosts = await Post.find({
+    $or: [
+      { title: regex },
+      { skills: regex}
+    ]
+  });
+
+  return res.json(matchingPosts);
+});
+
+// Function to escape special characters for use in a regular expression
+function escapeRegex(text) {
+  return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
+}
+
 const deleteApplication = asyncHandler(async (req, res) => {
   const postId = req.params.pId;
   const userId = req.user.id; // Assuming req.user._id contains the id of the current user
@@ -439,6 +461,7 @@ module.exports = {
   apply,
   accept,
   reject,
+  searchPosts,
   findMatchingPosts,
   deleteApplication,
   getMyApplications,

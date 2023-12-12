@@ -12,6 +12,7 @@ const {
   hiding,
   apply,
   getApplicationResume,
+  searchPosts,
   accept,
   reject,
   findMatchingPosts,
@@ -42,6 +43,9 @@ router.route("/paging/hidden").get(paginatedHiddenPosts);
 // route link (http://localhost:4000/posts/create)
 router.route("/create").post(createPost);
 
+// route link (http://localhost:4000/posts/search)
+router.route("/find").get(searchPosts);
+
 // route link http://localhost:4000/posts/hiding/:pId
 router.route("/hiding/:pId").put(hiding);
 
@@ -55,6 +59,7 @@ router.route("/:pId/applications/delete").delete(deleteApplication);
 
 // route link (http://localhost:4000/posts/myapplications)
 router.route("/myapplications").get(getMyApplications);
+
 
 // route link (http://localhost:4000/posts/postsWithApps)
 router.route("/postsWithApps").get(postsWithApps);
