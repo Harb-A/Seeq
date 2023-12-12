@@ -97,7 +97,9 @@ const Dashboard = () => {
   }, [currentPage]);
 
   // Determine which array to use based on showRecommendedPosts
-  const jobPosts = showRecommendedPosts ? recommendedPostsData : allPostsData;
+  const jobPosts = showRecommendedPosts
+    ? allRecommendedPostsData
+    : allPostsData;
 
   // Pagination logic
   const maxPerPage = 5;
