@@ -1,6 +1,7 @@
 const { Mongoose } = require("mongoose");
 const asyncHandler = require("express-async-handler");
 const User = require("../Models/UserModel");
+const bcrypt = require("bcrypt");
 require("dotenv").config();
 const express = require("express");
 //return all users that are noq the current user
@@ -66,4 +67,16 @@ const updateUser = asyncHandler(async (req, res) => {
   return res.json(updatedUser);
 });
 
-module.exports = { getUsers, getUser, getPost, updateUser };
+const updatePassword = asyncHandler(async (req, res) => {
+  const userId = req.params.uid;
+  const { newPassword } = req.body;
+
+  // Hash the new password before saving
+  const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+  const updatedUser = await User.findByIdAndUpdate(userId, { password: hashedPassword }, { new: true });
+
+  return res.json(updatedUser);
+});
+
+module.exports = { getUsers, getUser, getPost, updateUser, updatePassword };
