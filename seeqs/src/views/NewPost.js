@@ -28,8 +28,9 @@ const NewPost = () => {
     const authToken = localStorage.getItem("accessToken");
 
     if (!authToken) {
-      alert("Authentication token not found. Please log in.");
-      return;
+      // If not authenticated, redirect to the login page
+      console.log("Access token not found. Redirecting to login page...");
+      navigate("/"); // Adjust the path based on your route setup
     }
 
     // Prepare form data

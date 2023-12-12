@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Taskbar from "../components/Taskbar";
 import "../styles/DetailPage.css";
 
@@ -10,8 +10,16 @@ const DetailPage = () => {
   const [coverLetter, setCoverLetter] = useState("");
   const [attachedFile, setAttachedFile] = useState(null);
 
+  const navigate = useNavigate();
+
   useEffect(() => {
     const authToken = localStorage.getItem("accessToken");
+
+    if (!authToken) {
+      // If not authenticated, redirect to the login page
+      console.log("Access token not found. Redirecting to login page...");
+      navigate("/"); // Adjust the path based on your route setup
+    }
 
     fetch(`http://localhost:4000/posts/${id}`, {
       headers: {
