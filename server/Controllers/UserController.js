@@ -46,14 +46,23 @@ const updateUser = asyncHandler(async (req, res) => {
   const userId = req.user.id;
   const fields = req.body;
 
-  // If a new password is provided, hash it before saving
-  if (fields.password) {
-    fields.password = await bcrypt.hash(fields.password);
+  const user = await User.findById(userId);
+
+  // If a new password is provided, check the current password first
+  if (fields.password && fields.currentPassword) {
+    const isMatch = await bcrypt.compare(fields.currentPassword, user.password);
+
+    if (!isMatch) {
+      return res.status(400).json({ message: 'Current password is incorrect' });
+    }
+
+    // Hash the new password before saving
+    fields.password = await bcrypt.hash(fields.password, 10);
   }
 
-  const user = await User.findByIdAndUpdate(userId, fields, { new: true });
+  const updatedUser = await User.findByIdAndUpdate(userId, fields, { new: true });
 
-  return res.json(user);
+  return res.json(updatedUser);
 });
 
 module.exports = { getUsers, getUser, getPost, updateUser };
